@@ -8,7 +8,7 @@ import io.ktor.client.request.url
 class MovieDetailsImpl(private val client: HttpClient) : MovieDetailsRemoteDataSource {
     override suspend fun getMovieDetails(id: String): MovieDetailsResponse {
         return client.get {
-            url("https://api.themoviedb.org/3/movie/939243")
+            url("https://api.themoviedb.org/3/movie/$id")
         }
     }
 }
