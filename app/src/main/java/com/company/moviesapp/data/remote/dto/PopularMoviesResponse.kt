@@ -4,9 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MovieListResponse(
+data class PopularMoviesResponse(
     val page: Long,
-    val results: List<MovieResponse>,
+    val results: List<PopularMovie>,
     @SerialName("total_pages")
     val totalPages: Long,
     @SerialName("total_results")
@@ -14,7 +14,7 @@ data class MovieListResponse(
 )
 
 @Serializable
-data class MovieResponse(
+data class PopularMovie(
     val adult: Boolean,
     @SerialName("backdrop_path")
     val backdropPath: String,
