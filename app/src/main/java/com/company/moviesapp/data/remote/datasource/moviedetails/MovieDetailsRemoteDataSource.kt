@@ -1,7 +1,7 @@
 package com.company.moviesapp.data.remote.datasource.moviedetails
 
-import com.company.moviesapp.data.remote.dto.MovieDetails
+import com.company.moviesapp.data.remote.dto.MovieDetailsResponse
 
 interface MovieDetailsRemoteDataSource {
-    suspend fun getMovieDetails(id: String): MovieDetails
+    suspend fun getMovieDetails(id: String): MovieDetailsResponse
 }
