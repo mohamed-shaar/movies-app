@@ -1,4 +1,4 @@
-package com.company.moviesapp.data.remote.datasource
+package com.company.moviesapp.data.remote.datasource.popularmovies
 
 import com.company.moviesapp.data.remote.dto.MovieListResponse
 import io.ktor.client.HttpClient
