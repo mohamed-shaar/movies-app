@@ -6,7 +6,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.url
 
-class PopularMoviesImpl(private val client: HttpClient): PopularMovies {
+class PopularMoviesImpl(private val client: HttpClient): PopularMoviesRemoteDataSource {
     override suspend fun getMovies(pageNumber: Int): PopularMoviesResponse {
             return client.get {
                 url("https://api.themoviedb.org/3/movie/popular")
