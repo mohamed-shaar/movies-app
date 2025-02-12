@@ -67,6 +67,10 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.ktor.client.logging.jvm)
 
+    // Coil
+    implementation(libs.coil.compose)
+    implementation(libs.ktor.client.android)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
