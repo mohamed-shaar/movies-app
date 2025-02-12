@@ -1,4 +1,4 @@
-package com.company.moviesapp.viewmodel
+package com.company.moviesapp.presentation.viewmodel
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
@@ -24,8 +24,8 @@ class MoviesViewModel(
 ) : ViewModel(), ViewModelProvider.Factory {
     private var pageNumber: Int = 1
 
-    private val _movies = MutableStateFlow<List<MovieDisplayModel>>(mutableListOf())
-    val movies: StateFlow<List<MovieDisplayModel>> get() = _movies.asStateFlow()
+    private val _moviesState = MutableStateFlow<MovieUiState>(MovieUiState.Loading)
+    val moviesState: StateFlow<MovieUiState> get() = _moviesState.asStateFlow()
 
     private val _textSearch = MutableStateFlow("")
     private val textSearch: StateFlow<String> = _textSearch.asStateFlow()
@@ -56,7 +56,7 @@ class MoviesViewModel(
                 )
             )
         }
-        _movies.value = movieList
+        _moviesState.value = MovieUiState.Success(movieList)
     }
 
     fun setSearchText(it: String) {
@@ -68,6 +68,7 @@ class MoviesViewModel(
             getPopularMovies()
             return
         }
+        _moviesState.value = MovieUiState.Loading
         val searchMoviesResponse: SearchMoviesResponse =
             searchMoviesRemoteDataSource.searchMovies(
                 query = query,
@@ -85,7 +86,7 @@ class MoviesViewModel(
                 )
             )
         }
-        _movies.value = movieList
+        _moviesState.value = MovieUiState.Success(movieList)
     }
 }
 
@@ -101,4 +102,13 @@ class PopularMoviesViewModelFactory(
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
+}
+
+sealed interface MovieUiState {
+    data class Success(
+        val movies: List<MovieDisplayModel>
+    ) : MovieUiState
+
+    data object Error : MovieUiState
+    data object Loading : MovieUiState
 }
