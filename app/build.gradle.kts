@@ -70,6 +70,7 @@ dependencies {
     // Coil
     implementation(libs.coil.compose)
     implementation(libs.ktor.client.android)
+    implementation(libs.androidx.lifecycle.runtime.compose.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
