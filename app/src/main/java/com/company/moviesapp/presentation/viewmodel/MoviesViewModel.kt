@@ -90,7 +90,7 @@ class MoviesViewModel(
     }
 }
 
-class PopularMoviesViewModelFactory(
+class MoviesViewModelFactory(
     private val popularMoviesRemoteDataSource: PopularMoviesRemoteDataSource,
     private val searchMoviesRemoteDataSource: SearchMoviesRemoteDataSource
 ) : ViewModelProvider.Factory {
