@@ -1,5 +1,6 @@
 [versions]
 agp = "8.5.0"
+coilCompose = "2.4.0"
 kotlin = "1.9.0"
 coreKtx = "1.10.1"
 junit = "4.13.2"
@@ -13,9 +14,11 @@ ktorClientSerialization = "1.5.0"
 lifecycleRuntimeKtx = "2.6.1"
 activityCompose = "1.8.0"
 composeBom = "2024.04.01"
+lifecycleRuntimeComposeAndroid = "2.8.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -34,6 +37,7 @@ ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "k
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorClientCore" }
 ktor-client-logging-jvm = { module = "io.ktor:ktor-client-logging-jvm", version.ref = "ktorClientLoggingJvm" }
 ktor-client-serialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktorClientSerialization" }
+androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose-android", version.ref = "lifecycleRuntimeComposeAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
