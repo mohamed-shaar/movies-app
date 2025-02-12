@@ -27,6 +27,7 @@ import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.headers
+import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
@@ -40,7 +41,10 @@ class MainActivity : ComponentActivity() {
         }
         defaultRequest {
             headers {
-
+                append(
+                    HttpHeaders.Authorization,
+                    "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzRjNDUyNzk3ZTJkNDk3ZmFlNjE3OWMxNjVjNGY0YSIsIm5iZiI6MTU2MzA5NDczNi44MDQ5OTk4LCJzdWIiOiI1ZDJhZWVkMGEyOTRmMDI4NDYyZTc3MzEiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.U74vUrPid2qhLBWbpe9j1W_ScNl9nEAEktulzeZHB8o"
+                )
             }
         }
     }
