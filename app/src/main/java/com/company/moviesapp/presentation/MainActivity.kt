@@ -71,11 +71,9 @@ class MainActivity : ComponentActivity() {
                     ) {
                         SimpleOutlinedTextFieldSample(
                             onCall = { input ->
-                                runBlocking {
-                                    searchMovies(
-                                        input,
-                                    )
-                                }
+                                searchMovies(
+                                    input,
+                                )
                             }
                         )
                         MovieList(moviesViewModel = moviesViewModel)
