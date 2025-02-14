@@ -34,7 +34,6 @@ import coil.compose.SubcomposeAsyncImageContent
 import com.company.moviesapp.presentation.models.MovieDisplayModel
 import com.company.moviesapp.presentation.viewmodel.MovieUiState
 import com.company.moviesapp.presentation.viewmodel.MoviesViewModel
-import kotlinx.coroutines.runBlocking
 
 @Composable
 fun MovieList(moviesViewModel: MoviesViewModel) {
@@ -64,7 +63,7 @@ fun MovieList(moviesViewModel: MoviesViewModel) {
         }
 
         else -> {
-            return Button(onClick = { runBlocking { moviesViewModel.getPopularMovies() } }) {
+            return Button(onClick = { moviesViewModel.getData() }) {
                 Text("Retry")
             }
         }

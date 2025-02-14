@@ -33,30 +33,42 @@ class MoviesViewModel(
     init {
         viewModelScope.launch {
             // As soon the textSearch flow changes,
-            // if the user stops typing for 1000ms, the item will be emitted
+            // if the user stops typing for 2000ms, the item will be emitted
             textSearch.debounce(2000).collect { query ->
                 callSearchMovie(query)
             }
         }
     }
 
-    @SuppressLint("NewApi")
-    suspend fun getPopularMovies() {
-        val moviesResponse: PopularMoviesResponse =
-            popularMoviesRemoteDataSource.getMovies(pageNumber = pageNumber)
-        val movieList: MutableList<MovieDisplayModel> = mutableListOf()
-        for (movie in moviesResponse.results) {
-            movieList.add(
-                MovieDisplayModel(
-                    title = movie.title,
-                    overview = movie.overview,
-                    image = "https://image.tmdb.org/t/p/w300${movie.posterPath}",
-                    addToWatch = false,
-                    null
-                )
-            )
+    fun getData() {
+        viewModelScope.launch {
+            getPopularMovies()
         }
-        _moviesState.value = MovieUiState.Success(movieList)
+    }
+
+    @SuppressLint("NewApi")
+    private suspend fun getPopularMovies() {
+        try {
+            _moviesState.value = MovieUiState.Loading
+            val moviesResponse: PopularMoviesResponse =
+                popularMoviesRemoteDataSource.getMovies(pageNumber = pageNumber)
+            val movieList: MutableList<MovieDisplayModel> = mutableListOf()
+            for (movie in moviesResponse.results) {
+                movieList.add(
+                    MovieDisplayModel(
+                        title = movie.title,
+                        overview = movie.overview,
+                        image = "https://image.tmdb.org/t/p/w300${movie.posterPath}",
+                        addToWatch = false,
+                        null
+                    )
+                )
+            }
+            _moviesState.value = MovieUiState.Success(movieList)
+        } catch (e: Exception) {
+            println(e)
+            _moviesState.value = MovieUiState.Error
+        }
     }
 
     fun setSearchText(it: String) {

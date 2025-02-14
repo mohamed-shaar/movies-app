@@ -27,6 +27,7 @@ import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.headers
+import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
@@ -58,7 +59,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        runBlocking { moviesViewModel.getPopularMovies() }
+        moviesViewModel.getData()
         setContent {
             MoviesAppTheme {
                 Scaffold(modifier = Modifier.fillMaxWidth()) { innerPadding ->
