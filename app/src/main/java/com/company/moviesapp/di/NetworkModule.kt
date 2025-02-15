@@ -1,9 +1,15 @@
 package com.company.moviesapp.di
 
+import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsImpl
+import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsRemoteDataSource
+import com.company.moviesapp.data.remote.datasource.moviedetails.MovieDetailsImpl
+import com.company.moviesapp.data.remote.datasource.moviedetails.MovieDetailsRemoteDataSource
 import com.company.moviesapp.data.remote.datasource.popularmovies.PopularMoviesImpl
 import com.company.moviesapp.data.remote.datasource.popularmovies.PopularMoviesRemoteDataSource
 import com.company.moviesapp.data.remote.datasource.searchmovies.SearchMoviesImpl
 import com.company.moviesapp.data.remote.datasource.searchmovies.SearchMoviesRemoteDataSource
+import com.company.moviesapp.data.remote.datasource.similarmovies.SimilarMoviesImpl
+import com.company.moviesapp.data.remote.datasource.similarmovies.SimilarMoviesRemoteDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -53,5 +59,23 @@ object NetworkModule {
     @Singleton
     fun provideSearchMovieDetailsRemoteDataSource(client: HttpClient): SearchMoviesRemoteDataSource {
         return SearchMoviesImpl(client) // Provide the implementation
+    }
+
+    @Provides
+    @Singleton
+    fun provideMovieDetailsRemoteDataSource(client: HttpClient): MovieDetailsRemoteDataSource {
+        return MovieDetailsImpl(client) // Provide the implementation
+    }
+
+    @Provides
+    @Singleton
+    fun provideMovieCreditsRemoteDataSource(client: HttpClient): MovieCreditsRemoteDataSource {
+        return MovieCreditsImpl(client) // Provide the implementation
+    }
+
+    @Provides
+    @Singleton
+    fun provideSimilarMoviesRemoteDataSource(client: HttpClient): SimilarMoviesRemoteDataSource {
+        return SimilarMoviesImpl(client) // Provide the implementation
     }
 }
