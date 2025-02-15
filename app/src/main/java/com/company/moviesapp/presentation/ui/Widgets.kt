@@ -2,6 +2,7 @@ package com.company.moviesapp.presentation.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,7 +46,7 @@ import com.company.moviesapp.presentation.viewmodel.MoviesViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MovieList(moviesViewModel: MoviesViewModel) {
+fun MovieList(moviesViewModel: MoviesViewModel, onClick: (String) -> Unit) {
 
     val moviesState by moviesViewModel.moviesState.collectAsStateWithLifecycle()
 
@@ -76,7 +77,7 @@ fun MovieList(moviesViewModel: MoviesViewModel) {
 
                     // List of movies in this group
                     items(group.movies) { movie ->
-                        MovieItem(movie)
+                        MovieItem(movie, onClick)
                     }
                 }
             }
@@ -93,11 +94,14 @@ fun MovieList(moviesViewModel: MoviesViewModel) {
 }
 
 @Composable
-fun MovieItem(movie: MovieDisplayModel) {
+fun MovieItem(movie: MovieDisplayModel, onClick: (String) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = 4.dp)
+            .clickable {
+                onClick(movie.id)
+            },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row {

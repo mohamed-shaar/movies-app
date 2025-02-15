@@ -9,7 +9,7 @@ data class MovieDetailsResponse(
     @SerialName("backdrop_path")
     val backdropPath: String?,
     @SerialName("belongs_to_collection")
-    val belongsToCollection: BelongsToCollection,
+    val belongsToCollection: BelongsToCollection?,
     val budget: Long,
     val genres: List<Genre>,
     val homepage: String,
@@ -25,7 +25,7 @@ data class MovieDetailsResponse(
     val overview: String,
     val popularity: Double,
     @SerialName("poster_path")
-    val posterPath: String,
+    val posterPath: String?,
     @SerialName("production_companies")
     val productionCompanies: List<ProductionCompany>,
     @SerialName("production_countries")
@@ -51,9 +51,9 @@ data class BelongsToCollection(
     val id: Long,
     val name: String,
     @SerialName("poster_path")
-    val posterPath: String,
+    val posterPath: String?,
     @SerialName("backdrop_path")
-    val backdropPath: String,
+    val backdropPath: String?,
 )
 
 @Serializable
@@ -66,7 +66,7 @@ data class Genre(
 data class ProductionCompany(
     val id: Long,
     @SerialName("logo_path")
-    val logoPath: String,
+    val logoPath: String?,
     val name: String,
     @SerialName("origin_country")
     val originCountry: String,

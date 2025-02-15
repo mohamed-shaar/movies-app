@@ -16,11 +16,11 @@ class MovieDetailsViewModel(
     private val _moviesState = MutableStateFlow<MovieDetailsUiState>(MovieDetailsUiState.Loading)
     val moviesState: StateFlow<MovieDetailsUiState> get() = _moviesState.asStateFlow()
 
-    suspend fun getMovieDetailsScreen(id: Int) {
+    suspend fun getMovieDetailsScreen(id: String) {
         try {
             _moviesState.value = MovieDetailsUiState.Loading
             val movieDetails: MovieDetailsDisplayModel =
-                getMovieDetailsScreen.getMovieDetailsScreen(id.toString())
+                getMovieDetailsScreen.getMovieDetailsScreen(id)
             _moviesState.value = MovieDetailsUiState.Success(movieDetails)
         } catch (e: Exception) {
             println(e.toString())

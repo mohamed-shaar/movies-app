@@ -1,5 +1,6 @@
 package com.company.moviesapp.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,7 +29,6 @@ import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.headers
 import io.ktor.http.HttpHeaders
-import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
 
@@ -79,7 +79,18 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                         )
-                        MovieList(moviesViewModel = moviesViewModel)
+                        MovieList(
+                            moviesViewModel = moviesViewModel,
+                            onClick = { id -> // Create an Intent to navigate to SecondActivity
+                                val intent =
+                                    Intent(applicationContext, MovieDetailsActivity::class.java)
+
+                                // Optionally, pass data to the next activity
+                                intent.putExtra("id", id)
+
+                                // Start the SecondActivity
+                                startActivity(intent)
+                            })
                     }
                 }
             }
