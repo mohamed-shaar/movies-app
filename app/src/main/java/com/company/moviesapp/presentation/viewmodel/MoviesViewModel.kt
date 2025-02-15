@@ -59,6 +59,7 @@ class MoviesViewModel(
             for (movie in moviesResponse.results) {
                 movieList.add(
                     MovieDisplayModel(
+                        id = movie.id.toString(),
                         title = movie.title,
                         overview = movie.overview,
                         image = "https://image.tmdb.org/t/p/w300${movie.posterPath}",
@@ -101,11 +102,12 @@ class MoviesViewModel(
             for (movie in searchMoviesResponse.results) {
                 movieList.add(
                     MovieDisplayModel(
+                        id = movie.id.toString(),
                         title = movie.title,
                         overview = movie.overview,
                         image = "https://image.tmdb.org/t/p/w300${movie.posterPath}",
                         addToWatch = false,
-                        null
+                        releaseDate = parseDate(dateString = movie.releaseDate)
                     )
                 )
             }
