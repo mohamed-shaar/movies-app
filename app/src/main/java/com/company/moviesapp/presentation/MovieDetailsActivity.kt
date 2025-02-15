@@ -5,16 +5,22 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -33,9 +39,11 @@ import com.company.moviesapp.data.remote.datasource.moviedetails.MovieDetailsRem
 import com.company.moviesapp.data.remote.datasource.similarmovies.SimilarMoviesImpl
 import com.company.moviesapp.data.remote.datasource.similarmovies.SimilarMoviesRemoteDataSource
 import com.company.moviesapp.presentation.mappers.MovieDetailsMapperImpl
+import com.company.moviesapp.presentation.models.CastDisplayModel
 import com.company.moviesapp.presentation.models.MovieDetailsDisplayModel
 import com.company.moviesapp.presentation.ui.ImageWithPlaceholder
 import com.company.moviesapp.presentation.ui.MovieItem
+import com.company.moviesapp.presentation.usecase.GetMovieDetailsScreenUseCaseImpl
 import com.company.moviesapp.presentation.viewmodel.MovieDetailsUiState
 import com.company.moviesapp.presentation.viewmodel.MovieDetailsViewModel
 import com.company.moviesapp.presentation.viewmodel.MovieDetailsViewModelFactory
@@ -77,10 +85,12 @@ class MovieDetailsActivity : ComponentActivity() {
 
     private val movieDetailsViewModel: MovieDetailsViewModel by viewModels<MovieDetailsViewModel> {
         MovieDetailsViewModelFactory(
-            movieDetailsRemoteDataSource,
-            movieCreditsRemoteDataSource,
-            similarMoviesRemoteDataSource,
-            MovieDetailsMapperImpl(),
+            GetMovieDetailsScreenUseCaseImpl(
+                movieDetailsRemoteDataSource = movieDetailsRemoteDataSource,
+                movieCreditsRemoteDataSource = movieCreditsRemoteDataSource,
+                similarMoviesRemoteDataSource = similarMoviesRemoteDataSource,
+                movieDetailsMapper = MovieDetailsMapperImpl(),
+            )
         )
     }
 
@@ -116,6 +126,7 @@ fun DetailsScreen(movieViewModel: MovieDetailsViewModel, innerPadding: PaddingVa
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
             ) {
                 Row(
                     modifier = Modifier
@@ -148,6 +159,21 @@ fun DetailsScreen(movieViewModel: MovieDetailsViewModel, innerPadding: PaddingVa
                     // Content for each page
                     MovieItem(movie = movieDetails.similarMovies[page])
                 }
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                Text(text = "Actors")
+                LazyRow {
+                    items(movieDetails.cast) { actor ->
+                        ProfileItem(actor)
+                    }
+                }
+                Box(modifier = Modifier.height(8.dp))
+                Text(text = "Directors")
+                LazyRow {
+                    items(movieDetails.crew) { director ->
+                        ProfileItem(director)
+                    }
+                }
+                Box(modifier = Modifier.height(16.dp))
             }
         }
 
@@ -156,5 +182,15 @@ fun DetailsScreen(movieViewModel: MovieDetailsViewModel, innerPadding: PaddingVa
                 Text(text = "Retry")
             }
         }
+    }
+}
+
+@Composable
+private fun ProfileItem(actor: CastDisplayModel) {
+    Column(modifier = Modifier.padding(end = 16.dp)) {
+        Box(modifier = Modifier.clip(RoundedCornerShape(8.dp))) {
+            ImageWithPlaceholder(imageUrl = actor.profilePath)
+        }
+        Text(text = actor.name)
     }
 }
