@@ -43,7 +43,7 @@ class MovieDetailsMapperImpl : MovieDetailsMapper {
         return MovieDetailsDisplayModel(
             title = movieDetailsResponse.title,
             overview = movieDetailsResponse.overview,
-            image = movieDetailsResponse.posterPath,
+            image = "https://image.tmdb.org/t/p/w300${movieDetailsResponse.posterPath}",
             addToWatch = false,
             tagline = movieDetailsResponse.tagline,
             revenue = movieDetailsResponse.revenue,

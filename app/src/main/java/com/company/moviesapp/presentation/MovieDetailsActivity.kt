@@ -4,19 +4,28 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import coil.compose.AsyncImage
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsImpl
 import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsRemoteDataSource
 import com.company.moviesapp.data.remote.datasource.moviedetails.MovieDetailsImpl
@@ -25,6 +34,8 @@ import com.company.moviesapp.data.remote.datasource.similarmovies.SimilarMoviesI
 import com.company.moviesapp.data.remote.datasource.similarmovies.SimilarMoviesRemoteDataSource
 import com.company.moviesapp.presentation.mappers.MovieDetailsMapperImpl
 import com.company.moviesapp.presentation.models.MovieDetailsDisplayModel
+import com.company.moviesapp.presentation.ui.ImageWithPlaceholder
+import com.company.moviesapp.presentation.ui.MovieItem
 import com.company.moviesapp.presentation.viewmodel.MovieDetailsUiState
 import com.company.moviesapp.presentation.viewmodel.MovieDetailsViewModel
 import com.company.moviesapp.presentation.viewmodel.MovieDetailsViewModelFactory
@@ -86,9 +97,10 @@ class MovieDetailsActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DetailsScreen(movieViewModel: MovieDetailsViewModel, innerPadding: PaddingValues) {
-    val moviesState by movieViewModel.moviesState.collectAsState()
+    val moviesState by movieViewModel.moviesState.collectAsStateWithLifecycle()
 
     when (moviesState) {
         is MovieDetailsUiState.Loading -> {
@@ -98,17 +110,44 @@ fun DetailsScreen(movieViewModel: MovieDetailsViewModel, innerPadding: PaddingVa
         is MovieDetailsUiState.Success -> {
             val movieDetails: MovieDetailsDisplayModel =
                 (moviesState as MovieDetailsUiState.Success).movieDetailsDisplayModel
-            Column(modifier = Modifier.padding(innerPadding)) {
-                Row {
-                    AsyncImage(model = movieDetails.image, contentDescription = null)
+            val pagerState =
+                rememberPagerState(pageCount = { movieDetails.similarMovies.size }) // State to track the current page
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    ImageWithPlaceholder(
+                        movieDetails.image,
+                        Modifier
+                            .padding(8.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                    )
                     Column {
                         Text(text = movieDetails.title)
                         Text(text = movieDetails.tagline)
                         Text(text = movieDetails.overview)
                         Text(text = movieDetails.status)
+                        Text(text = movieDetails.revenue.toString())
+                        Text(text = movieDetails.releaseDate)
                     }
                 }
-
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                Text(text = "Similar Movies", modifier = Modifier.padding(horizontal = 8.dp))
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier
+                        .fillMaxWidth(0.9f)
+                        .fillMaxHeight(0.3f)
+                        .padding(horizontal = 8.dp)
+                ) { page ->
+                    // Content for each page
+                    MovieItem(movie = movieDetails.similarMovies[page])
+                }
             }
         }
 
