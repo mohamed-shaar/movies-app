@@ -5,7 +5,6 @@ import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsRem
 import com.company.moviesapp.data.remote.datasource.moviedetails.MovieDetailsRemoteDataSource
 import com.company.moviesapp.data.remote.datasource.similarmovies.SimilarMoviesRemoteDataSource
 import com.company.moviesapp.presentation.mappers.MovieDetailsMapper
-import com.company.moviesapp.presentation.mappers.MovieDetailsMapperImpl
 import com.company.moviesapp.presentation.usecase.GetMovieDetailsScreenUseCase
 import com.company.moviesapp.presentation.usecase.GetMovieDetailsScreenUseCaseImpl
 import dagger.Module
@@ -17,12 +16,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class) // Scope the dependencies to the application lifecycle
 object UseCaseModule {
-
-    @Provides
-    @Singleton
-    fun provideMovieDetailsMapper(): MovieDetailsMapper {
-        return MovieDetailsMapperImpl()
-    }
 
     @Provides
     @Singleton
