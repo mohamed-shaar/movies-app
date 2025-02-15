@@ -1,0 +1,19 @@
+package com.company.moviesapp.di
+
+import com.company.moviesapp.data.local.datasource.TokenProvider
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+object AuthModule {
+
+    @Provides
+    @Singleton
+    fun provideTokenProvider(): TokenProvider {
+        return TokenProvider()
+    }
+}

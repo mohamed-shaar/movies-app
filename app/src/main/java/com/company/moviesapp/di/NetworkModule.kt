@@ -1,5 +1,6 @@
 package com.company.moviesapp.di
 
+import com.company.moviesapp.data.local.datasource.TokenProvider
 import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsImpl
 import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsRemoteDataSource
 import com.company.moviesapp.data.remote.datasource.moviedetails.MovieDetailsImpl
@@ -30,7 +31,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideHttpClient(): HttpClient {
+    fun provideHttpClient(tokenProvider: TokenProvider): HttpClient {
         return HttpClient {
             install(Logging) {
                 level = LogLevel.ALL
@@ -39,10 +40,11 @@ object NetworkModule {
                 serializer = KotlinxSerializer()
             }
             defaultRequest {
+                val token = tokenProvider.getToken()
                 headers {
                     append(
                         HttpHeaders.Authorization,
-                        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzRjNDUyNzk3ZTJkNDk3ZmFlNjE3OWMxNjVjNGY0YSIsIm5iZiI6MTU2MzA5NDczNi44MDQ5OTk4LCJzdWIiOiI1ZDJhZWVkMGEyOTRmMDI4NDYyZTc3MzEiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.U74vUrPid2qhLBWbpe9j1W_ScNl9nEAEktulzeZHB8o"
+                        "Bearer $token"
                     )
                 }
             }

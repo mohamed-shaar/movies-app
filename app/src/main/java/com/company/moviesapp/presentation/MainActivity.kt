@@ -12,19 +12,28 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.company.moviesapp.data.local.datasource.TokenProvider
 import com.company.moviesapp.presentation.ui.MovieList
 import com.company.moviesapp.presentation.viewmodel.MoviesViewModel
 import com.company.moviesapp.ui.theme.MoviesAppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val moviesViewModel by viewModels<MoviesViewModel>()
 
+    @Inject
+    lateinit var tokenProvider: TokenProvider
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val token = intent.getStringExtra("bearer_token")
+        if (token != null) {
+            tokenProvider.setToken(token)
+        }
         moviesViewModel.getData()
         setContent {
             MoviesAppTheme {
