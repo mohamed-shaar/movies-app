@@ -1,5 +1,6 @@
 package com.company.moviesapp.di
 
+import com.company.moviesapp.data.local.datasource.WatchLaterLocalDataSource
 import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsRemoteDataSource
 import com.company.moviesapp.data.remote.datasource.moviedetails.MovieDetailsRemoteDataSource
 import com.company.moviesapp.data.remote.datasource.similarmovies.SimilarMoviesRemoteDataSource
@@ -29,13 +30,15 @@ object UseCaseModule {
         movieDetailsRemoteDataSource: MovieDetailsRemoteDataSource,
         movieCreditsRemoteDataSource: MovieCreditsRemoteDataSource,
         similarMoviesRemoteDataSource: SimilarMoviesRemoteDataSource,
-        movieDetailsMapper: MovieDetailsMapper
+        movieDetailsMapper: MovieDetailsMapper,
+        watchLaterLocalDataSource: WatchLaterLocalDataSource
     ): GetMovieDetailsScreenUseCase {
         return GetMovieDetailsScreenUseCaseImpl(
             movieDetailsRemoteDataSource,
             movieCreditsRemoteDataSource,
             similarMoviesRemoteDataSource,
-            movieDetailsMapper
+            movieDetailsMapper,
+            watchLaterLocalDataSource
         )
     }
 }

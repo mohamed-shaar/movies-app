@@ -3,6 +3,7 @@ package com.company.moviesapp.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.company.moviesapp.data.local.datasource.WatchLaterLocalDataSource
 import com.company.moviesapp.presentation.models.MovieDetailsDisplayModel
 import com.company.moviesapp.presentation.usecase.GetMovieDetailsScreenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,13 +15,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MovieDetailsViewModel @Inject constructor(
-    private val getMovieDetailsScreen: GetMovieDetailsScreenUseCase
+    private val getMovieDetailsScreen: GetMovieDetailsScreenUseCase,
+    private val watchLaterLocalDataSource: WatchLaterLocalDataSource
 ) : ViewModel(), ViewModelProvider.Factory {
 
     private val _moviesState = MutableStateFlow<MovieDetailsUiState>(MovieDetailsUiState.Loading)
     val moviesState: StateFlow<MovieDetailsUiState> get() = _moviesState.asStateFlow()
 
-    fun getDate(id: String) {
+    fun getData(id: String) {
         viewModelScope.launch {
             getMovieDetails(id)
         }
@@ -35,6 +37,27 @@ class MovieDetailsViewModel @Inject constructor(
         } catch (e: Exception) {
             println(e.toString())
             _moviesState.value = MovieDetailsUiState.Error
+        }
+    }
+
+    // Toggle the "Watch Later" status
+    fun toggleWatchLater() {
+        val currentState = _moviesState.value
+        if (currentState is MovieDetailsUiState.Success) {
+            val movieDetails = currentState.movieDetailsDisplayModel
+            val isAdded = !movieDetails.addToWatch // Toggle the status
+
+            viewModelScope.launch {
+                if (isAdded) {
+                    watchLaterLocalDataSource.addToWatchLater(movieDetails.id)
+                } else {
+                    watchLaterLocalDataSource.removeFromWatchLater(movieDetails.id)
+                }
+
+                // Update the UI state
+                val updatedMovieDetails = movieDetails.copy(addToWatch = isAdded)
+                _moviesState.value = MovieDetailsUiState.Success(updatedMovieDetails)
+            }
         }
     }
 }

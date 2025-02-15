@@ -1,5 +1,6 @@
 package com.company.moviesapp.presentation.usecase
 
+import com.company.moviesapp.data.local.datasource.WatchLaterLocalDataSource
 import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsRemoteDataSource
 import com.company.moviesapp.data.remote.datasource.moviedetails.MovieDetailsRemoteDataSource
 import com.company.moviesapp.data.remote.datasource.similarmovies.SimilarMoviesRemoteDataSource
@@ -18,6 +19,7 @@ class GetMovieDetailsScreenUseCaseImpl(
     private val movieCreditsRemoteDataSource: MovieCreditsRemoteDataSource,
     private val similarMoviesRemoteDataSource: SimilarMoviesRemoteDataSource,
     private val movieDetailsMapper: MovieDetailsMapper,
+    private val watchLaterLocalDataSource: WatchLaterLocalDataSource
 ) : GetMovieDetailsScreenUseCase {
     override suspend fun getMovieDetailsScreen(id: String): MovieDetailsDisplayModel {
         val movieDetailsResponse = movieDetailsRemoteDataSource.getMovieDetails(id)
@@ -48,7 +50,8 @@ class GetMovieDetailsScreenUseCaseImpl(
             movieDetailsResponse,
             movieCreditsResponse,
             similarMovies,
-            similarMoviesCreditsResponse
+            similarMoviesCreditsResponse,
+            watchLaterLocalDataSource
         )
         return movieDetails
     }

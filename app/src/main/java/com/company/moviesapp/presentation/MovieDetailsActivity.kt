@@ -38,6 +38,7 @@ import com.company.moviesapp.presentation.models.CastDisplayModel
 import com.company.moviesapp.presentation.models.MovieDetailsDisplayModel
 import com.company.moviesapp.presentation.ui.ImageWithPlaceholder
 import com.company.moviesapp.presentation.ui.MovieItem
+import com.company.moviesapp.presentation.ui.WatchLaterIcon
 import com.company.moviesapp.presentation.viewmodel.MovieDetailsUiState
 import com.company.moviesapp.presentation.viewmodel.MovieDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,11 +52,11 @@ class MovieDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         movieId = intent.getStringExtra("id") ?: ""
-        movieDetailsViewModel.getDate(movieId)
+        movieDetailsViewModel.getData(movieId)
         setContent {
             Scaffold { innerPadding ->
                 DetailsScreen(movieDetailsViewModel, innerPadding, onRetry = {
-                    movieDetailsViewModel.getDate(movieId)
+                    movieDetailsViewModel.getData(movieId)
                 })
             }
         }
@@ -103,7 +104,18 @@ fun DetailsScreen(
                             .clip(RoundedCornerShape(8.dp))
                     )
                     Column {
-                        Text(text = movieDetails.title)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(text = movieDetails.title)
+                            WatchLaterIcon(
+                                isAddedToWatchLater = movieDetails.addToWatch,
+                                onToggleWatchLater = {
+                                    movieViewModel.toggleWatchLater()
+
+                                })
+                        }
                         Text(text = movieDetails.tagline)
                         Text(text = movieDetails.overview)
                         Text(text = movieDetails.status)
