@@ -57,7 +57,6 @@ import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.headers
 import io.ktor.http.HttpHeaders
-import kotlinx.coroutines.runBlocking
 
 class MovieDetailsActivity : ComponentActivity() {
     private lateinit var movieId: String
@@ -100,15 +99,11 @@ class MovieDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         movieId = intent.getStringExtra("id") ?: ""
-        runBlocking {
-            movieDetailsViewModel.getMovieDetailsScreen(movieId)
-        }
+        movieDetailsViewModel.getDate(movieId)
         setContent {
             Scaffold { innerPadding ->
                 DetailsScreen(movieDetailsViewModel, innerPadding, onRetry = {
-                    runBlocking {
-                        movieDetailsViewModel.getMovieDetailsScreen(movieId)
-                    }
+                    movieDetailsViewModel.getDate(movieId)
                 })
             }
         }
@@ -126,7 +121,12 @@ fun DetailsScreen(
 
     when (moviesState) {
         is MovieDetailsUiState.Loading -> {
-            CircularProgressIndicator()
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CircularProgressIndicator()
+            }
         }
 
         is MovieDetailsUiState.Success -> {

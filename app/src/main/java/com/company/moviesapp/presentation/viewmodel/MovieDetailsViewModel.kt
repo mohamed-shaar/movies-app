@@ -2,12 +2,14 @@ package com.company.moviesapp.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.company.moviesapp.presentation.models.MovieDetailsDisplayModel
 import com.company.moviesapp.presentation.usecase.GetMovieDetailsScreenUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class MovieDetailsViewModel(
     private val getMovieDetailsScreen: GetMovieDetailsScreenUseCase
@@ -16,7 +18,13 @@ class MovieDetailsViewModel(
     private val _moviesState = MutableStateFlow<MovieDetailsUiState>(MovieDetailsUiState.Loading)
     val moviesState: StateFlow<MovieDetailsUiState> get() = _moviesState.asStateFlow()
 
-    suspend fun getMovieDetailsScreen(id: String) {
+    fun getDate(id: String) {
+        viewModelScope.launch {
+            getMovieDetails(id)
+        }
+    }
+
+    private suspend fun getMovieDetails(id: String) {
         try {
             _moviesState.value = MovieDetailsUiState.Loading
             val movieDetails: MovieDetailsDisplayModel =
