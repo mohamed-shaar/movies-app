@@ -66,6 +66,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        moviesViewModel.refreshMovies()
+    }
+
     private fun searchMovies(it: String) {
         moviesViewModel.setSearchText(it)
     }

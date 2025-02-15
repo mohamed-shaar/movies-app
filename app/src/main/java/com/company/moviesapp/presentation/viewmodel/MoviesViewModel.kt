@@ -161,6 +161,19 @@ class MoviesViewModel @Inject constructor(
         }
     }
 
+    fun refreshMovies() {
+        val currentState = _moviesState.value
+        if (currentState is MovieUiState.Success) {
+            val updatedGroups = currentState.movies.map { group ->
+                val updatedMovies = group.movies.map { movie ->
+                    movie.copy(addToWatch = isAddedToWatchLater(movie.id))
+                }
+                group.copy(movies = updatedMovies)
+            }
+            _moviesState.value = MovieUiState.Success(updatedGroups)
+        }
+    }
+
 }
 
 sealed interface MovieUiState {
