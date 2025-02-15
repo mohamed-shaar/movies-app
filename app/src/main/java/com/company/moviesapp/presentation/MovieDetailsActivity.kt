@@ -96,8 +96,9 @@ class MovieDetailsActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val movieId = intent.getStringExtra("id") ?: ""
         runBlocking {
-            movieDetailsViewModel.getMovieDetailsScreen(939243)
+            movieDetailsViewModel.getMovieDetailsScreen(movieId)
         }
         setContent {
             Scaffold { innerPadding ->
@@ -157,7 +158,7 @@ fun DetailsScreen(movieViewModel: MovieDetailsViewModel, innerPadding: PaddingVa
                         .padding(horizontal = 8.dp)
                 ) { page ->
                     // Content for each page
-                    MovieItem(movie = movieDetails.similarMovies[page])
+                    MovieItem(movie = movieDetails.similarMovies[page], onClick = {})
                 }
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                 Text(text = "Actors")
