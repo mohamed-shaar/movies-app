@@ -60,61 +60,62 @@ fun MovieList(
 ) {
 
     val moviesState by moviesViewModel.moviesState.collectAsStateWithLifecycle()
-
-    when (moviesState) {
-        is MovieUiState.Loading -> {
-            return Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                CircularProgressIndicator()
-            }
-        }
-
-        is MovieUiState.Success -> {
-            val groupedMovies = (moviesState as MovieUiState.Success).movies
-            SimpleOutlinedTextFieldSample(
-                onCall = { input ->
-                    onSearch(
-                        input,
-                    )
-                }
-            )
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-
-                groupedMovies.forEach { group ->
-                    // Sticky header for the year
-                    stickyHeader {
-                        YearHeader(group.year)
-                    }
-
-                    // List of movies in this group
-                    items(group.movies) { movie ->
-                        MovieItem(movie, onClick, onToggleWatchLater = { isAdded ->
-                            onToggleWatchLater(movie.id, isAdded)
-                        })
-                    }
-                }
-            }
-        }
-
-        else -> {
-            return Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Text(
-                    text = "An unexpected error happened. Please try again.",
-                    modifier = Modifier.padding(bottom = 8.dp)
+    Column {
+        SimpleOutlinedTextFieldSample(
+            onCall = { input ->
+                onSearch(
+                    input,
                 )
-                Button(onClick = { moviesViewModel.getData() }) {
-                    Text("Retry")
+            }
+        )
+        when (moviesState) {
+            is MovieUiState.Loading -> {
+                return Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            is MovieUiState.Success -> {
+                val groupedMovies = (moviesState as MovieUiState.Success).movies
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+
+                    groupedMovies.forEach { group ->
+                        // Sticky header for the year
+                        stickyHeader {
+                            YearHeader(group.year)
+                        }
+
+                        // List of movies in this group
+                        items(group.movies) { movie ->
+                            MovieItem(movie, onClick, onToggleWatchLater = { isAdded ->
+                                onToggleWatchLater(movie.id, isAdded)
+                            })
+                        }
+                    }
+                }
+            }
+
+            else -> {
+                return Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = "An unexpected error happened. Please try again.",
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    Button(onClick = { moviesViewModel.getData() }) {
+                        Text("Retry")
+                    }
                 }
             }
         }
