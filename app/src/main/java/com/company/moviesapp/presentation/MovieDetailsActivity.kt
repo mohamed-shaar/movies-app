@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,6 +29,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -58,6 +60,7 @@ import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.runBlocking
 
 class MovieDetailsActivity : ComponentActivity() {
+    private lateinit var movieId: String
 
     private val client = HttpClient {
         install(Logging) {
@@ -96,13 +99,17 @@ class MovieDetailsActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val movieId = intent.getStringExtra("id") ?: ""
+        movieId = intent.getStringExtra("id") ?: ""
         runBlocking {
             movieDetailsViewModel.getMovieDetailsScreen(movieId)
         }
         setContent {
             Scaffold { innerPadding ->
-                DetailsScreen(movieDetailsViewModel, innerPadding)
+                DetailsScreen(movieDetailsViewModel, innerPadding, onRetry = {
+                    runBlocking {
+                        movieDetailsViewModel.getMovieDetailsScreen(movieId)
+                    }
+                })
             }
         }
     }
@@ -110,7 +117,11 @@ class MovieDetailsActivity : ComponentActivity() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DetailsScreen(movieViewModel: MovieDetailsViewModel, innerPadding: PaddingValues) {
+fun DetailsScreen(
+    movieViewModel: MovieDetailsViewModel,
+    innerPadding: PaddingValues,
+    onRetry: () -> Unit
+) {
     val moviesState by movieViewModel.moviesState.collectAsStateWithLifecycle()
 
     when (moviesState) {
@@ -179,8 +190,18 @@ fun DetailsScreen(movieViewModel: MovieDetailsViewModel, innerPadding: PaddingVa
         }
 
         is MovieDetailsUiState.Error -> {
-            Button(onClick = { }) {
-                Text(text = "Retry")
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Text(
+                    text = "An unexpected error happened. Please try again.",
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                Button(onClick = { onRetry() }) {
+                    Text(text = "Retry")
+                }
             }
         }
     }
