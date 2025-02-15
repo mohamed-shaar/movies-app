@@ -1,6 +1,7 @@
 package com.company.moviesapp.presentation.models
 
 data class MovieDetailsDisplayModel(
+    val id: String,
     val title: String,
     val overview: String,
     val image: String,

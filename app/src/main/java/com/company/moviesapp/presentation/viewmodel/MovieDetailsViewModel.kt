@@ -3,22 +3,26 @@ package com.company.moviesapp.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
+import com.company.moviesapp.data.local.datasource.WatchLaterLocalDataSource
 import com.company.moviesapp.presentation.models.MovieDetailsDisplayModel
 import com.company.moviesapp.presentation.usecase.GetMovieDetailsScreenUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MovieDetailsViewModel(
-    private val getMovieDetailsScreen: GetMovieDetailsScreenUseCase
+@HiltViewModel
+class MovieDetailsViewModel @Inject constructor(
+    private val getMovieDetailsScreen: GetMovieDetailsScreenUseCase,
+    private val watchLaterLocalDataSource: WatchLaterLocalDataSource
 ) : ViewModel(), ViewModelProvider.Factory {
 
     private val _moviesState = MutableStateFlow<MovieDetailsUiState>(MovieDetailsUiState.Loading)
     val moviesState: StateFlow<MovieDetailsUiState> get() = _moviesState.asStateFlow()
 
-    fun getDate(id: String) {
+    fun getData(id: String) {
         viewModelScope.launch {
             getMovieDetails(id)
         }
@@ -35,20 +39,26 @@ class MovieDetailsViewModel(
             _moviesState.value = MovieDetailsUiState.Error
         }
     }
-}
 
-class MovieDetailsViewModelFactory(
-    private val getMovieDetailsScreen: GetMovieDetailsScreenUseCase
-) : ViewModelProvider.Factory {
+    // Toggle the "Watch Later" status
+    fun toggleWatchLater() {
+        val currentState = _moviesState.value
+        if (currentState is MovieDetailsUiState.Success) {
+            val movieDetails = currentState.movieDetailsDisplayModel
+            val isAdded = !movieDetails.addToWatch // Toggle the status
 
-    override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-        if (modelClass.isAssignableFrom(MovieDetailsViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return MovieDetailsViewModel(
-                getMovieDetailsScreen
-            ) as T
+            viewModelScope.launch {
+                if (isAdded) {
+                    watchLaterLocalDataSource.addToWatchLater(movieDetails.id)
+                } else {
+                    watchLaterLocalDataSource.removeFromWatchLater(movieDetails.id)
+                }
+
+                // Update the UI state
+                val updatedMovieDetails = movieDetails.copy(addToWatch = isAdded)
+                _moviesState.value = MovieDetailsUiState.Success(updatedMovieDetails)
+            }
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
 

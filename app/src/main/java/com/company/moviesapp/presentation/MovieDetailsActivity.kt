@@ -34,76 +34,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsImpl
-import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsRemoteDataSource
-import com.company.moviesapp.data.remote.datasource.moviedetails.MovieDetailsImpl
-import com.company.moviesapp.data.remote.datasource.moviedetails.MovieDetailsRemoteDataSource
-import com.company.moviesapp.data.remote.datasource.similarmovies.SimilarMoviesImpl
-import com.company.moviesapp.data.remote.datasource.similarmovies.SimilarMoviesRemoteDataSource
-import com.company.moviesapp.presentation.mappers.MovieDetailsMapperImpl
 import com.company.moviesapp.presentation.models.CastDisplayModel
 import com.company.moviesapp.presentation.models.MovieDetailsDisplayModel
 import com.company.moviesapp.presentation.ui.ImageWithPlaceholder
 import com.company.moviesapp.presentation.ui.MovieItem
-import com.company.moviesapp.presentation.usecase.GetMovieDetailsScreenUseCaseImpl
+import com.company.moviesapp.presentation.ui.WatchLaterIcon
 import com.company.moviesapp.presentation.viewmodel.MovieDetailsUiState
 import com.company.moviesapp.presentation.viewmodel.MovieDetailsViewModel
-import com.company.moviesapp.presentation.viewmodel.MovieDetailsViewModelFactory
-import io.ktor.client.HttpClient
-import io.ktor.client.features.defaultRequest
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
-import io.ktor.client.features.logging.LogLevel
-import io.ktor.client.features.logging.Logging
-import io.ktor.client.request.headers
-import io.ktor.http.HttpHeaders
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MovieDetailsActivity : ComponentActivity() {
     private lateinit var movieId: String
 
-    private val client = HttpClient {
-        install(Logging) {
-            level = LogLevel.ALL
-        }
-        install(JsonFeature) {
-            serializer = KotlinxSerializer()
-        }
-        defaultRequest {
-            headers {
-                append(
-                    HttpHeaders.Authorization,
-                    "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzRjNDUyNzk3ZTJkNDk3ZmFlNjE3OWMxNjVjNGY0YSIsIm5iZiI6MTU2MzA5NDczNi44MDQ5OTk4LCJzdWIiOiI1ZDJhZWVkMGEyOTRmMDI4NDYyZTc3MzEiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.U74vUrPid2qhLBWbpe9j1W_ScNl9nEAEktulzeZHB8o"
-                )
-            }
-        }
-    }
-
-    private val movieDetailsRemoteDataSource: MovieDetailsRemoteDataSource =
-        MovieDetailsImpl(client)
-    private val movieCreditsRemoteDataSource: MovieCreditsRemoteDataSource =
-        MovieCreditsImpl(client)
-    private val similarMoviesRemoteDataSource: SimilarMoviesRemoteDataSource =
-        SimilarMoviesImpl(client)
-
-    private val movieDetailsViewModel: MovieDetailsViewModel by viewModels<MovieDetailsViewModel> {
-        MovieDetailsViewModelFactory(
-            GetMovieDetailsScreenUseCaseImpl(
-                movieDetailsRemoteDataSource = movieDetailsRemoteDataSource,
-                movieCreditsRemoteDataSource = movieCreditsRemoteDataSource,
-                similarMoviesRemoteDataSource = similarMoviesRemoteDataSource,
-                movieDetailsMapper = MovieDetailsMapperImpl(),
-            )
-        )
-    }
+    private val movieDetailsViewModel: MovieDetailsViewModel by viewModels<MovieDetailsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         movieId = intent.getStringExtra("id") ?: ""
-        movieDetailsViewModel.getDate(movieId)
+        movieDetailsViewModel.getData(movieId)
         setContent {
             Scaffold { innerPadding ->
                 DetailsScreen(movieDetailsViewModel, innerPadding, onRetry = {
-                    movieDetailsViewModel.getDate(movieId)
+                    movieDetailsViewModel.getData(movieId)
                 })
             }
         }
@@ -151,7 +104,18 @@ fun DetailsScreen(
                             .clip(RoundedCornerShape(8.dp))
                     )
                     Column {
-                        Text(text = movieDetails.title)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(text = movieDetails.title)
+                            WatchLaterIcon(
+                                isAddedToWatchLater = movieDetails.addToWatch,
+                                onToggleWatchLater = {
+                                    movieViewModel.toggleWatchLater()
+
+                                })
+                        }
                         Text(text = movieDetails.tagline)
                         Text(text = movieDetails.overview)
                         Text(text = movieDetails.status)
@@ -169,7 +133,10 @@ fun DetailsScreen(
                         .padding(horizontal = 8.dp)
                 ) { page ->
                     // Content for each page
-                    MovieItem(movie = movieDetails.similarMovies[page], onClick = {})
+                    MovieItem(
+                        movie = movieDetails.similarMovies[page],
+                        onClick = {},
+                        onToggleWatchLater = {})
                 }
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                 Text(text = "Actors")
