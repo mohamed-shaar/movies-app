@@ -128,17 +128,15 @@ class MoviesViewModel @Inject constructor(
         }
     }
 
-    fun addToWatchLater(id: String) {
+    fun toggleWatchLater(movieId: String, isAdded: Boolean) {
         viewModelScope.launch {
-            watcherLaterLocalDataSource.addToWatchLater(id)
-            updateMovieWatchLaterStatus(id, true)
-        }
-    }
-
-    fun removeFromWatchLater(id: String) {
-        viewModelScope.launch {
-            watcherLaterLocalDataSource.removeFromWatchLater(id)
-            updateMovieWatchLaterStatus(id, false)
+            if (isAdded) {
+                watcherLaterLocalDataSource.addToWatchLater(movieId)
+                updateMovieWatchLaterStatus(movieId, true)
+            } else {
+                watcherLaterLocalDataSource.removeFromWatchLater(movieId)
+                updateMovieWatchLaterStatus(movieId, false)
+            }
         }
     }
 

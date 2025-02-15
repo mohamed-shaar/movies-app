@@ -13,13 +13,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -50,7 +55,8 @@ import com.company.moviesapp.presentation.viewmodel.MoviesViewModel
 fun MovieList(
     moviesViewModel: MoviesViewModel,
     onClick: (String) -> Unit,
-    onSearch: (String) -> Unit
+    onSearch: (String) -> Unit,
+    onToggleWatchLater: (String, Boolean) -> Unit
 ) {
 
     val moviesState by moviesViewModel.moviesState.collectAsStateWithLifecycle()
@@ -89,10 +95,8 @@ fun MovieList(
 
                     // List of movies in this group
                     items(group.movies) { movie ->
-                        MovieItem(movie, onClick, onAddToWatchLater = {
-                            moviesViewModel.addToWatchLater(movie.id)
-                        }, onRemoveFromWatchLater = {
-                            moviesViewModel.removeFromWatchLater(movie.id)
+                        MovieItem(movie, onClick, onToggleWatchLater = { isAdded ->
+                            onToggleWatchLater(movie.id, isAdded)
                         })
                     }
                 }
@@ -123,8 +127,7 @@ fun MovieList(
 fun MovieItem(
     movie: MovieDisplayModel,
     onClick: (String) -> Unit,
-    onAddToWatchLater: (String) -> Unit,
-    onRemoveFromWatchLater: (String) -> Unit
+    onToggleWatchLater: (Boolean) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -145,11 +148,20 @@ fun MovieItem(
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
-                Text(
-                    text = movie.title,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = movie.title,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.weight(1f)
+                    )
+                    WatchLaterIcon(
+                        isAddedToWatchLater = movie.addToWatch,
+                        onToggleWatchLater = { onToggleWatchLater(!movie.addToWatch) })
+                }
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = movie.overview,
@@ -157,21 +169,6 @@ fun MovieItem(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                if (movie.addToWatch)
-                    Button(onClick = { onRemoveFromWatchLater(movie.id) }) {
-                        Text(
-                            text = "Added to Watchlist",
-                            fontSize = 12.sp,
-                            color = Color.White
-                        )
-                    } else
-                    Button(onClick = { onAddToWatchLater(movie.id) }) {
-                        Text(
-                            text = "Not in Watchlist",
-                            fontSize = 12.sp,
-                            color = Color.White
-                        )
-                    }
             }
         }
     }
@@ -229,4 +226,28 @@ fun YearHeader(year: Int) {
             modifier = Modifier.padding(16.dp)
         )
     }
+}
+
+@Composable
+fun WatchLaterIcon(
+    isAddedToWatchLater: Boolean,
+    onToggleWatchLater: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Icon(
+        imageVector = if (isAddedToWatchLater) {
+            Icons.Filled.Favorite // Filled icon when added to watch later
+        } else {
+            Icons.Filled.FavoriteBorder // Outlined icon when not added
+        },
+        contentDescription = if (isAddedToWatchLater) {
+            "Remove from Watch Later"
+        } else {
+            "Add to Watch Later"
+        },
+        tint = if (isAddedToWatchLater) Color.Blue else Color.Gray, // Customize colors
+        modifier = modifier
+            .size(24.dp) // Set icon size
+            .clickable { onToggleWatchLater() } // Handle click
+    )
 }

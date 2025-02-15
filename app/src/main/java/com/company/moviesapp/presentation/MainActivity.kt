@@ -57,6 +57,8 @@ class MainActivity : ComponentActivity() {
                                 startActivity(intent)
                             }, onSearch = { query ->
                                 searchMovies(query)
+                            }, onToggleWatchLater = { movieId, isAdded ->
+                                moviesViewModel.toggleWatchLater(movieId, isAdded)
                             })
                     }
                 }

@@ -124,8 +124,7 @@ fun DetailsScreen(
                     MovieItem(
                         movie = movieDetails.similarMovies[page],
                         onClick = {},
-                        onAddToWatchLater = {},
-                        onRemoveFromWatchLater = {})
+                        onToggleWatchLater = {})
                 }
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                 Text(text = "Actors")
