@@ -5,11 +5,11 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.company.moviesapp.data.local.datasource.WatchLaterLocalDataSource
 import com.company.moviesapp.data.remote.datasource.popularmovies.PopularMoviesRemoteDataSource
 import com.company.moviesapp.data.remote.datasource.searchmovies.SearchMoviesRemoteDataSource
 import com.company.moviesapp.presentation.mappers.MovieMapperImpl
 import com.company.moviesapp.presentation.models.GroupedMovieList
+import com.company.moviesapp.shared.data.local.datasource.WatchLaterLocalDataSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow

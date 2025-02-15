@@ -1,4 +1,4 @@
-package com.company.moviesapp.data.local.datasource
+package com.company.moviesapp.shared.data.local.datasource
 
 import android.content.SharedPreferences
 

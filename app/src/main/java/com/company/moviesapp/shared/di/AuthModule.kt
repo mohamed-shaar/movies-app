@@ -1,6 +1,6 @@
 package com.company.moviesapp.shared.di
 
-import com.company.moviesapp.data.local.datasource.TokenProvider
+import com.company.moviesapp.shared.data.local.datasource.TokenProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

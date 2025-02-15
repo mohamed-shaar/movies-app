@@ -1,4 +1,4 @@
-package com.company.moviesapp.data.local.datasource
+package com.company.moviesapp.shared.data.local.datasource
 
 import javax.inject.Inject
 import javax.inject.Singleton

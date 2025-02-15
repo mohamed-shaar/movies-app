@@ -1,8 +1,8 @@
 package com.company.moviesapp.shared.di
 
 import android.content.Context
-import com.company.moviesapp.data.local.datasource.WatchLaterLocalDataSource
-import com.company.moviesapp.data.local.datasource.WatchLaterLocalDatasourceImpl
+import com.company.moviesapp.shared.data.local.datasource.WatchLaterLocalDataSource
+import com.company.moviesapp.shared.data.local.datasource.WatchLaterLocalDatasourceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

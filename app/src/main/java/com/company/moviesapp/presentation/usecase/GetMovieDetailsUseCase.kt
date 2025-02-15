@@ -1,6 +1,5 @@
 package com.company.moviesapp.presentation.usecase
 
-import com.company.moviesapp.data.local.datasource.WatchLaterLocalDataSource
 import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsRemoteDataSource
 import com.company.moviesapp.data.remote.datasource.moviedetails.MovieDetailsRemoteDataSource
 import com.company.moviesapp.data.remote.datasource.similarmovies.SimilarMoviesRemoteDataSource
@@ -9,6 +8,7 @@ import com.company.moviesapp.presentation.mappers.MovieDetailsMapper
 import com.company.moviesapp.presentation.models.MovieDetailsDisplayModel
 import com.company.moviesapp.presentation.models.MovieDisplayModel
 import com.company.moviesapp.presentation.utils.parseDate
+import com.company.moviesapp.shared.data.local.datasource.WatchLaterLocalDataSource
 
 interface GetMovieDetailsScreenUseCase {
     suspend fun getMovieDetailsScreen(id: String): MovieDetailsDisplayModel

@@ -1,6 +1,5 @@
 package com.company.moviesapp.shared.di
 
-import com.company.moviesapp.data.local.datasource.TokenProvider
 import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsImpl
 import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsRemoteDataSource
 import com.company.moviesapp.data.remote.datasource.moviedetails.MovieDetailsImpl
@@ -11,6 +10,7 @@ import com.company.moviesapp.data.remote.datasource.searchmovies.SearchMoviesImp
 import com.company.moviesapp.data.remote.datasource.searchmovies.SearchMoviesRemoteDataSource
 import com.company.moviesapp.data.remote.datasource.similarmovies.SimilarMoviesImpl
 import com.company.moviesapp.data.remote.datasource.similarmovies.SimilarMoviesRemoteDataSource
+import com.company.moviesapp.shared.data.local.datasource.TokenProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
