@@ -67,7 +67,7 @@ class MoviesViewModel @Inject constructor(
                         title = movie.title,
                         overview = movie.overview,
                         image = "https://image.tmdb.org/t/p/w300${movie.posterPath}",
-                        addToWatch = false,
+                        addToWatch = isAddedToWatchLater(movie.id.toString()),
                         releaseDate = parseDate(dateString = movie.releaseDate)
                     )
                 )
@@ -129,16 +129,40 @@ class MoviesViewModel @Inject constructor(
     }
 
     fun addToWatchLater(id: String) {
-        watcherLaterLocalDataSource.addToWatchLater(id)
+        viewModelScope.launch {
+            watcherLaterLocalDataSource.addToWatchLater(id)
+            updateMovieWatchLaterStatus(id, true)
+        }
     }
 
     fun removeFromWatchLater(id: String) {
-        watcherLaterLocalDataSource.removeFromWatchLater(id)
+        viewModelScope.launch {
+            watcherLaterLocalDataSource.removeFromWatchLater(id)
+            updateMovieWatchLaterStatus(id, false)
+        }
     }
 
     private fun isAddedToWatchLater(id: String): Boolean {
         return watcherLaterLocalDataSource.isInWatchLater(id)
     }
+
+    private fun updateMovieWatchLaterStatus(id: String, isAdded: Boolean) {
+        val currentState = _moviesState.value
+        if (currentState is MovieUiState.Success) {
+            val updatedGroups = currentState.movies.map { group ->
+                val updatedMovies = group.movies.map { movie ->
+                    if (movie.id == id) {
+                        movie.copy(addToWatch = isAdded)
+                    } else {
+                        movie
+                    }
+                }
+                group.copy(movies = updatedMovies)
+            }
+            _moviesState.value = MovieUiState.Success(updatedGroups)
+        }
+    }
+
 }
 
 sealed interface MovieUiState {

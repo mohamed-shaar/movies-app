@@ -158,18 +158,18 @@ fun MovieItem(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 if (movie.addToWatch)
-                    Button(onClick = { onAddToWatchLater(movie.id) }) {
+                    Button(onClick = { onRemoveFromWatchLater(movie.id) }) {
                         Text(
                             text = "Added to Watchlist",
                             fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.primary
+                            color = Color.White
                         )
                     } else
-                    Button(onClick = { onRemoveFromWatchLater(movie.id) }) {
+                    Button(onClick = { onAddToWatchLater(movie.id) }) {
                         Text(
                             text = "Not in Watchlist",
                             fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.error
+                            color = Color.White
                         )
                     }
             }
