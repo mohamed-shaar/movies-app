@@ -8,8 +8,7 @@ import com.company.moviesapp.data.remote.dto.SimilarMoviesResponse
 import com.company.moviesapp.presentation.models.CastDisplayModel
 import com.company.moviesapp.presentation.models.MovieDetailsDisplayModel
 import com.company.moviesapp.presentation.models.MovieDisplayModel
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import com.company.moviesapp.presentation.parseDate
 
 interface MovieDetailsMapper {
     fun mapMovieDetailsResponse(
@@ -26,8 +25,6 @@ class MovieDetailsMapperImpl : MovieDetailsMapper {
         movieCreditsResponse: MovieCreditsResponse,
         similarMoviesResponse: SimilarMoviesResponse
     ): MovieDetailsDisplayModel {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
         val actors: List<CastDisplayModel> = emptyList()
         val directors: List<CastDisplayModel> = emptyList()
 
@@ -38,7 +35,7 @@ class MovieDetailsMapperImpl : MovieDetailsMapper {
                     overview = similarMovie.overview,
                     image = "https://image.tmdb.org/t/p/w300${similarMovie.posterPath}",
                     addToWatch = false,
-                    releaseDate = LocalDate.parse(similarMovie.releaseDate, formatter)
+                    releaseDate = parseDate(dateString = similarMovie.releaseDate)
                 )
             }.toList()
 
