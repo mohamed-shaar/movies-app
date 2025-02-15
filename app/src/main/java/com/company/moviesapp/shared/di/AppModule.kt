@@ -1,4 +1,4 @@
-package com.company.moviesapp.di
+package com.company.moviesapp.shared.di
 
 import android.content.Context
 import com.company.moviesapp.data.local.datasource.WatchLaterLocalDataSource

@@ -1,4 +1,4 @@
-package com.company.moviesapp.di
+package com.company.moviesapp.shared.di
 
 import com.company.moviesapp.data.local.datasource.WatchLaterLocalDataSource
 import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsRemoteDataSource

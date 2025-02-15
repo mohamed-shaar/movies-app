@@ -1,4 +1,4 @@
-package com.company.moviesapp.di
+package com.company.moviesapp.shared.di
 
 import com.company.moviesapp.presentation.mappers.MovieDetailsMapper
 import com.company.moviesapp.presentation.mappers.MovieDetailsMapperImpl
