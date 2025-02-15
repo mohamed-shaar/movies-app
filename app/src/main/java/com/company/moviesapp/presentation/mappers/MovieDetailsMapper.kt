@@ -49,8 +49,11 @@ class MovieDetailsMapperImpl : MovieDetailsMapper {
             })
         }
 
-        var sortedActors: List<Cast> = filteredActors.sortedByDescending { it.popularity }
-        var sortedDirectors: List<Crew> = filteredDirectors.sortedByDescending { it.popularity }
+        val uniqueActors = filteredActors.distinctBy { it.id }
+        val uniqueDirectors = filteredDirectors.distinctBy { it.id }
+
+        var sortedActors: List<Cast> = uniqueActors.sortedByDescending { it.popularity }
+        var sortedDirectors: List<Crew> = uniqueDirectors.sortedByDescending { it.popularity }
 
         sortedActors = sortedActors.take(5)
         sortedDirectors = sortedDirectors.take(5)
