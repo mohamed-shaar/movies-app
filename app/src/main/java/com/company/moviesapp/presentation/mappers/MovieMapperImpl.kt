@@ -7,7 +7,7 @@ import com.company.moviesapp.data.remote.dto.PopularMovie
 import com.company.moviesapp.data.remote.dto.SearchMovie
 import com.company.moviesapp.presentation.models.GroupedMovieList
 import com.company.moviesapp.presentation.models.MovieDisplayModel
-import com.company.moviesapp.presentation.parseDate
+import com.company.moviesapp.presentation.utils.parseDate
 import java.time.ZoneId
 import javax.inject.Inject
 

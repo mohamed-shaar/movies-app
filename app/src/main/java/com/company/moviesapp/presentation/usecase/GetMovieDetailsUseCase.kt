@@ -8,7 +8,7 @@ import com.company.moviesapp.data.remote.dto.MovieCreditsResponse
 import com.company.moviesapp.presentation.mappers.MovieDetailsMapper
 import com.company.moviesapp.presentation.models.MovieDetailsDisplayModel
 import com.company.moviesapp.presentation.models.MovieDisplayModel
-import com.company.moviesapp.presentation.parseDate
+import com.company.moviesapp.presentation.utils.parseDate
 
 interface GetMovieDetailsScreenUseCase {
     suspend fun getMovieDetailsScreen(id: String): MovieDetailsDisplayModel
