@@ -18,7 +18,7 @@ import com.company.moviesapp.data.remote.datasource.searchmovies.SearchMoviesRem
 import com.company.moviesapp.presentation.ui.MovieList
 import com.company.moviesapp.presentation.ui.SimpleOutlinedTextFieldSample
 import com.company.moviesapp.presentation.viewmodel.MoviesViewModel
-import com.company.moviesapp.presentation.viewmodel.PopularMoviesViewModelFactory
+import com.company.moviesapp.presentation.viewmodel.MoviesViewModelFactory
 import com.company.moviesapp.ui.theme.MoviesAppTheme
 import io.ktor.client.HttpClient
 import io.ktor.client.features.defaultRequest
@@ -41,7 +41,10 @@ class MainActivity : ComponentActivity() {
         }
         defaultRequest {
             headers {
-
+                append(
+                    HttpHeaders.Authorization,
+                    "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzRjNDUyNzk3ZTJkNDk3ZmFlNjE3OWMxNjVjNGY0YSIsIm5iZiI6MTU2MzA5NDczNi44MDQ5OTk4LCJzdWIiOiI1ZDJhZWVkMGEyOTRmMDI4NDYyZTc3MzEiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.U74vUrPid2qhLBWbpe9j1W_ScNl9nEAEktulzeZHB8o"
+                )
             }
         }
     }
@@ -50,7 +53,7 @@ class MainActivity : ComponentActivity() {
     private val searchMoviesService: SearchMoviesRemoteDataSource = SearchMoviesImpl(client)
 
     private val moviesViewModel by viewModels<MoviesViewModel> {
-        PopularMoviesViewModelFactory(
+        MoviesViewModelFactory(
             movieService,
             searchMoviesService
         )

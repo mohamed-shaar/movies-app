@@ -3,6 +3,7 @@ package com.company.moviesapp.presentation.models
 import java.util.Date
 
 data class MovieDisplayModel(
+    val id: String,
     val title: String,
     val overview: String,
     val image: String,

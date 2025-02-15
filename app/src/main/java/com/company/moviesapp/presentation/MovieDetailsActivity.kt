@@ -3,20 +3,194 @@ package com.company.moviesapp.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsImpl
+import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsRemoteDataSource
+import com.company.moviesapp.data.remote.datasource.moviedetails.MovieDetailsImpl
+import com.company.moviesapp.data.remote.datasource.moviedetails.MovieDetailsRemoteDataSource
+import com.company.moviesapp.data.remote.datasource.similarmovies.SimilarMoviesImpl
+import com.company.moviesapp.data.remote.datasource.similarmovies.SimilarMoviesRemoteDataSource
+import com.company.moviesapp.presentation.mappers.MovieDetailsMapperImpl
+import com.company.moviesapp.presentation.models.CastDisplayModel
+import com.company.moviesapp.presentation.models.MovieDetailsDisplayModel
+import com.company.moviesapp.presentation.ui.ImageWithPlaceholder
+import com.company.moviesapp.presentation.ui.MovieItem
+import com.company.moviesapp.presentation.usecase.GetMovieDetailsScreenUseCaseImpl
+import com.company.moviesapp.presentation.viewmodel.MovieDetailsUiState
+import com.company.moviesapp.presentation.viewmodel.MovieDetailsViewModel
+import com.company.moviesapp.presentation.viewmodel.MovieDetailsViewModelFactory
+import io.ktor.client.HttpClient
+import io.ktor.client.features.defaultRequest
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.features.logging.LogLevel
+import io.ktor.client.features.logging.Logging
+import io.ktor.client.request.headers
+import io.ktor.http.HttpHeaders
+import kotlinx.coroutines.runBlocking
 
 class MovieDetailsActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            Scaffold { innerPadding ->
-                Column(modifier = Modifier.padding(innerPadding)) {
 
-                }
+    private val client = HttpClient {
+        install(Logging) {
+            level = LogLevel.ALL
+        }
+        install(JsonFeature) {
+            serializer = KotlinxSerializer()
+        }
+        defaultRequest {
+            headers {
+                append(
+                    HttpHeaders.Authorization,
+                    "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzRjNDUyNzk3ZTJkNDk3ZmFlNjE3OWMxNjVjNGY0YSIsIm5iZiI6MTU2MzA5NDczNi44MDQ5OTk4LCJzdWIiOiI1ZDJhZWVkMGEyOTRmMDI4NDYyZTc3MzEiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.U74vUrPid2qhLBWbpe9j1W_ScNl9nEAEktulzeZHB8o"
+                )
             }
         }
+    }
+
+    private val movieDetailsRemoteDataSource: MovieDetailsRemoteDataSource =
+        MovieDetailsImpl(client)
+    private val movieCreditsRemoteDataSource: MovieCreditsRemoteDataSource =
+        MovieCreditsImpl(client)
+    private val similarMoviesRemoteDataSource: SimilarMoviesRemoteDataSource =
+        SimilarMoviesImpl(client)
+
+    private val movieDetailsViewModel: MovieDetailsViewModel by viewModels<MovieDetailsViewModel> {
+        MovieDetailsViewModelFactory(
+            GetMovieDetailsScreenUseCaseImpl(
+                movieDetailsRemoteDataSource = movieDetailsRemoteDataSource,
+                movieCreditsRemoteDataSource = movieCreditsRemoteDataSource,
+                similarMoviesRemoteDataSource = similarMoviesRemoteDataSource,
+                movieDetailsMapper = MovieDetailsMapperImpl(),
+            )
+        )
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        runBlocking {
+            movieDetailsViewModel.getMovieDetailsScreen(939243)
+        }
+        setContent {
+            Scaffold { innerPadding ->
+                DetailsScreen(movieDetailsViewModel, innerPadding)
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun DetailsScreen(movieViewModel: MovieDetailsViewModel, innerPadding: PaddingValues) {
+    val moviesState by movieViewModel.moviesState.collectAsStateWithLifecycle()
+
+    when (moviesState) {
+        is MovieDetailsUiState.Loading -> {
+            CircularProgressIndicator()
+        }
+
+        is MovieDetailsUiState.Success -> {
+            val movieDetails: MovieDetailsDisplayModel =
+                (moviesState as MovieDetailsUiState.Success).movieDetailsDisplayModel
+            val pagerState =
+                rememberPagerState(pageCount = { movieDetails.similarMovies.size }) // State to track the current page
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    ImageWithPlaceholder(
+                        movieDetails.image,
+                        Modifier
+                            .padding(8.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                    )
+                    Column {
+                        Text(text = movieDetails.title)
+                        Text(text = movieDetails.tagline)
+                        Text(text = movieDetails.overview)
+                        Text(text = movieDetails.status)
+                        Text(text = movieDetails.revenue.toString())
+                        Text(text = movieDetails.releaseDate)
+                    }
+                }
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                Text(text = "Similar Movies", modifier = Modifier.padding(horizontal = 8.dp))
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier
+                        .fillMaxWidth(0.9f)
+                        .fillMaxHeight(0.3f)
+                        .padding(horizontal = 8.dp)
+                ) { page ->
+                    // Content for each page
+                    MovieItem(movie = movieDetails.similarMovies[page])
+                }
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                Text(text = "Actors")
+                LazyRow {
+                    items(movieDetails.cast) { actor ->
+                        ProfileItem(actor)
+                    }
+                }
+                Box(modifier = Modifier.height(8.dp))
+                Text(text = "Directors")
+                LazyRow {
+                    items(movieDetails.crew) { director ->
+                        ProfileItem(director)
+                    }
+                }
+                Box(modifier = Modifier.height(16.dp))
+            }
+        }
+
+        is MovieDetailsUiState.Error -> {
+            Button(onClick = { }) {
+                Text(text = "Retry")
+            }
+        }
+    }
+}
+
+@Composable
+private fun ProfileItem(actor: CastDisplayModel) {
+    Column(modifier = Modifier.padding(end = 16.dp)) {
+        Box(modifier = Modifier.clip(RoundedCornerShape(8.dp))) {
+            ImageWithPlaceholder(imageUrl = actor.profilePath)
+        }
+        Text(text = actor.name)
     }
 }
