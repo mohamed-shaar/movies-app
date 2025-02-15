@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        runBlocking { moviesViewModel.getPopularMovies() }
+        moviesViewModel.getData()
         setContent {
             MoviesAppTheme {
                 Scaffold(modifier = Modifier.fillMaxWidth()) { innerPadding ->
@@ -74,11 +74,9 @@ class MainActivity : ComponentActivity() {
                     ) {
                         SimpleOutlinedTextFieldSample(
                             onCall = { input ->
-                                runBlocking {
-                                    searchMovies(
-                                        input,
-                                    )
-                                }
+                                searchMovies(
+                                    input,
+                                )
                             }
                         )
                         MovieList(moviesViewModel = moviesViewModel)

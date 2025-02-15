@@ -9,13 +9,16 @@ import com.company.moviesapp.data.remote.datasource.popularmovies.PopularMoviesR
 import com.company.moviesapp.data.remote.datasource.searchmovies.SearchMoviesRemoteDataSource
 import com.company.moviesapp.data.remote.dto.PopularMoviesResponse
 import com.company.moviesapp.data.remote.dto.SearchMoviesResponse
+import com.company.moviesapp.presentation.models.GroupedMovieList
 import com.company.moviesapp.presentation.models.MovieDisplayModel
+import com.company.moviesapp.presentation.parseDate
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
+import java.time.ZoneId
 
 @OptIn(FlowPreview::class)
 class MoviesViewModel(
@@ -33,60 +36,90 @@ class MoviesViewModel(
     init {
         viewModelScope.launch {
             // As soon the textSearch flow changes,
-            // if the user stops typing for 1000ms, the item will be emitted
+            // if the user stops typing for 2000ms, the item will be emitted
             textSearch.debounce(2000).collect { query ->
                 callSearchMovie(query)
             }
         }
     }
 
-    @SuppressLint("NewApi")
-    suspend fun getPopularMovies() {
-        val moviesResponse: PopularMoviesResponse =
-            popularMoviesRemoteDataSource.getMovies(pageNumber = pageNumber)
-        val movieList: MutableList<MovieDisplayModel> = mutableListOf()
-        for (movie in moviesResponse.results) {
-            movieList.add(
-                MovieDisplayModel(
-                    title = movie.title,
-                    overview = movie.overview,
-                    image = "https://image.tmdb.org/t/p/w300${movie.posterPath}",
-                    addToWatch = false,
-                    null
-                )
-            )
+    fun getData() {
+        viewModelScope.launch {
+            getPopularMovies()
         }
-        _moviesState.value = MovieUiState.Success(movieList)
+    }
+
+    @SuppressLint("NewApi")
+    private suspend fun getPopularMovies() {
+        try {
+            _moviesState.value = MovieUiState.Loading
+            val moviesResponse: PopularMoviesResponse =
+                popularMoviesRemoteDataSource.getMovies(pageNumber = pageNumber)
+            val movieList: MutableList<MovieDisplayModel> = mutableListOf()
+            for (movie in moviesResponse.results) {
+                movieList.add(
+                    MovieDisplayModel(
+                        title = movie.title,
+                        overview = movie.overview,
+                        image = "https://image.tmdb.org/t/p/w300${movie.posterPath}",
+                        addToWatch = false,
+                        releaseDate = parseDate(dateString = movie.releaseDate)
+                    )
+                )
+            }
+            val groupedMap: Map<Int, List<MovieDisplayModel>> = movieList.groupBy { movie ->
+                movie.releaseDate?.toInstant()?.atZone(ZoneId.systemDefault())?.year ?: 0
+            }
+            val groups = groupedMap.map { (year, movieList) ->
+                GroupedMovieList(year, movieList)
+            }.sortedByDescending { it.year }
+            _moviesState.value = MovieUiState.Success(groups)
+        } catch (e: Exception) {
+            println(e)
+            _moviesState.value = MovieUiState.Error
+        }
     }
 
     fun setSearchText(it: String) {
         _textSearch.value = it
     }
 
+    @SuppressLint("NewApi")
     private suspend fun callSearchMovie(query: String) {
-        if (query.isEmpty()) {
-            getPopularMovies()
-            return
-        }
-        _moviesState.value = MovieUiState.Loading
-        val searchMoviesResponse: SearchMoviesResponse =
-            searchMoviesRemoteDataSource.searchMovies(
-                query = query,
-                pageNumber = pageNumber
-            )
-        val movieList: MutableList<MovieDisplayModel> = mutableListOf()
-        for (movie in searchMoviesResponse.results) {
-            movieList.add(
-                MovieDisplayModel(
-                    title = movie.title,
-                    overview = movie.overview,
-                    image = "https://image.tmdb.org/t/p/w300${movie.posterPath}",
-                    addToWatch = false,
-                    null
+        try {
+            if (query.isEmpty()) {
+                getPopularMovies()
+                return
+            }
+            _moviesState.value = MovieUiState.Loading
+            val searchMoviesResponse: SearchMoviesResponse =
+                searchMoviesRemoteDataSource.searchMovies(
+                    query = query,
+                    pageNumber = pageNumber
                 )
-            )
+            val movieList: MutableList<MovieDisplayModel> = mutableListOf()
+            for (movie in searchMoviesResponse.results) {
+                movieList.add(
+                    MovieDisplayModel(
+                        title = movie.title,
+                        overview = movie.overview,
+                        image = "https://image.tmdb.org/t/p/w300${movie.posterPath}",
+                        addToWatch = false,
+                        null
+                    )
+                )
+            }
+            val groupedMap: Map<Int, List<MovieDisplayModel>> = movieList.groupBy { movie ->
+                movie.releaseDate?.toInstant()?.atZone(ZoneId.systemDefault())?.year ?: 0
+            }
+            val groupedMovieList = groupedMap.map { (year, movieList) ->
+                GroupedMovieList(year, movieList)
+            }.sortedByDescending { it.year }
+            _moviesState.value = MovieUiState.Success(groupedMovieList)
+        } catch (e: Exception) {
+            println(e.toString())
+            _moviesState.value = MovieUiState.Error
         }
-        _moviesState.value = MovieUiState.Success(movieList)
     }
 }
 
@@ -106,7 +139,7 @@ class MoviesViewModelFactory(
 
 sealed interface MovieUiState {
     data class Success(
-        val movies: List<MovieDisplayModel>
+        val movies: List<GroupedMovieList>
     ) : MovieUiState
 
     data object Error : MovieUiState
