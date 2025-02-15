@@ -18,6 +18,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import java.time.ZoneId
 import javax.inject.Inject
@@ -41,9 +43,10 @@ class MoviesViewModel @Inject constructor(
         viewModelScope.launch {
             // As soon the textSearch flow changes,
             // if the user stops typing for 2000ms, the item will be emitted
-            textSearch.debounce(2000).collect { query ->
-                callSearchMovie(query)
-            }
+            textSearch.debounce(2000).distinctUntilChanged().drop(1)
+                .collect { query ->
+                    callSearchMovie(query)
+                }
         }
     }
 
