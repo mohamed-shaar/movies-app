@@ -3,6 +3,7 @@ package com.company.moviesapp.presentation.ui
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,7 +47,11 @@ import com.company.moviesapp.presentation.viewmodel.MoviesViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MovieList(moviesViewModel: MoviesViewModel, onClick: (String) -> Unit) {
+fun MovieList(
+    moviesViewModel: MoviesViewModel,
+    onClick: (String) -> Unit,
+    onSearch: (String) -> Unit
+) {
 
     val moviesState by moviesViewModel.moviesState.collectAsStateWithLifecycle()
 
@@ -62,6 +67,13 @@ fun MovieList(moviesViewModel: MoviesViewModel, onClick: (String) -> Unit) {
 
         is MovieUiState.Success -> {
             val groupedMovies = (moviesState as MovieUiState.Success).movies
+            SimpleOutlinedTextFieldSample(
+                onCall = { input ->
+                    onSearch(
+                        input,
+                    )
+                }
+            )
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -84,8 +96,18 @@ fun MovieList(moviesViewModel: MoviesViewModel, onClick: (String) -> Unit) {
         }
 
         else -> {
-            return Button(onClick = { moviesViewModel.getData() }) {
-                Text("Retry")
+            return Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Text(
+                    text = "An unexpected error happened. Please try again.",
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                Button(onClick = { moviesViewModel.getData() }) {
+                    Text("Retry")
+                }
             }
         }
     }

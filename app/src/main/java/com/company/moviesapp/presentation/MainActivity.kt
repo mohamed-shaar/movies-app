@@ -17,7 +17,6 @@ import com.company.moviesapp.data.remote.datasource.popularmovies.PopularMoviesR
 import com.company.moviesapp.data.remote.datasource.searchmovies.SearchMoviesImpl
 import com.company.moviesapp.data.remote.datasource.searchmovies.SearchMoviesRemoteDataSource
 import com.company.moviesapp.presentation.ui.MovieList
-import com.company.moviesapp.presentation.ui.SimpleOutlinedTextFieldSample
 import com.company.moviesapp.presentation.viewmodel.MoviesViewModel
 import com.company.moviesapp.presentation.viewmodel.MoviesViewModelFactory
 import com.company.moviesapp.ui.theme.MoviesAppTheme
@@ -72,13 +71,6 @@ class MainActivity : ComponentActivity() {
                             .padding(innerPadding),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        SimpleOutlinedTextFieldSample(
-                            onCall = { input ->
-                                searchMovies(
-                                    input,
-                                )
-                            }
-                        )
                         MovieList(
                             moviesViewModel = moviesViewModel,
                             onClick = { id -> // Create an Intent to navigate to SecondActivity
@@ -90,6 +82,8 @@ class MainActivity : ComponentActivity() {
 
                                 // Start the SecondActivity
                                 startActivity(intent)
+                            }, onSearch = { query ->
+                                searchMovies(query)
                             })
                     }
                 }
