@@ -1,5 +1,7 @@
 package com.company.moviesapp.presentation.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -50,6 +52,7 @@ import com.company.moviesapp.presentation.models.MovieDisplayModel
 import com.company.moviesapp.presentation.viewmodel.MovieUiState
 import com.company.moviesapp.presentation.viewmodel.MoviesViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MovieList(
@@ -218,7 +221,9 @@ fun ImageWithPlaceholder(
 fun YearHeader(year: Int) {
     Surface(
         color = MaterialTheme.colorScheme.primaryContainer,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
     ) {
         Text(
             text = "Year: $year",
