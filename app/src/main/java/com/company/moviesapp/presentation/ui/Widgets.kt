@@ -89,7 +89,11 @@ fun MovieList(
 
                     // List of movies in this group
                     items(group.movies) { movie ->
-                        MovieItem(movie, onClick)
+                        MovieItem(movie, onClick, onAddToWatchLater = {
+                            moviesViewModel.addToWatchLater(movie.id)
+                        }, onRemoveFromWatchLater = {
+                            moviesViewModel.removeFromWatchLater(movie.id)
+                        })
                     }
                 }
             }
@@ -116,7 +120,12 @@ fun MovieList(
 }
 
 @Composable
-fun MovieItem(movie: MovieDisplayModel, onClick: (String) -> Unit) {
+fun MovieItem(
+    movie: MovieDisplayModel,
+    onClick: (String) -> Unit,
+    onAddToWatchLater: (String) -> Unit,
+    onRemoveFromWatchLater: (String) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -148,11 +157,21 @@ fun MovieItem(movie: MovieDisplayModel, onClick: (String) -> Unit) {
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = if (movie.addToWatch) "Added to Watchlist" else "Not in Watchlist",
-                    fontSize = 12.sp,
-                    color = if (movie.addToWatch) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
-                )
+                if (movie.addToWatch)
+                    Button(onClick = { onAddToWatchLater(movie.id) }) {
+                        Text(
+                            text = "Added to Watchlist",
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    } else
+                    Button(onClick = { onRemoveFromWatchLater(movie.id) }) {
+                        Text(
+                            text = "Not in Watchlist",
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
             }
         }
     }

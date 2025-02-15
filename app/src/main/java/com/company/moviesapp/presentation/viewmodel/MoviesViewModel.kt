@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
+import com.company.moviesapp.data.local.datasource.WatchLaterLocalDataSource
 import com.company.moviesapp.data.remote.datasource.popularmovies.PopularMoviesRemoteDataSource
 import com.company.moviesapp.data.remote.datasource.searchmovies.SearchMoviesRemoteDataSource
 import com.company.moviesapp.data.remote.dto.PopularMoviesResponse
@@ -12,6 +12,7 @@ import com.company.moviesapp.data.remote.dto.SearchMoviesResponse
 import com.company.moviesapp.presentation.models.GroupedMovieList
 import com.company.moviesapp.presentation.models.MovieDisplayModel
 import com.company.moviesapp.presentation.parseDate
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,11 +20,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import java.time.ZoneId
+import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
-class MoviesViewModel(
+@HiltViewModel
+class MoviesViewModel @Inject constructor(
     private val popularMoviesRemoteDataSource: PopularMoviesRemoteDataSource,
-    private val searchMoviesRemoteDataSource: SearchMoviesRemoteDataSource
+    private val searchMoviesRemoteDataSource: SearchMoviesRemoteDataSource,
+    private val watcherLaterLocalDataSource: WatchLaterLocalDataSource
 ) : ViewModel(), ViewModelProvider.Factory {
     private var pageNumber: Int = 1
 
@@ -106,7 +110,7 @@ class MoviesViewModel(
                         title = movie.title,
                         overview = movie.overview,
                         image = "https://image.tmdb.org/t/p/w300${movie.posterPath}",
-                        addToWatch = false,
+                        addToWatch = isAddedToWatchLater(movie.id.toString()),
                         releaseDate = parseDate(dateString = movie.releaseDate)
                     )
                 )
@@ -123,19 +127,17 @@ class MoviesViewModel(
             _moviesState.value = MovieUiState.Error
         }
     }
-}
 
-class MoviesViewModelFactory(
-    private val popularMoviesRemoteDataSource: PopularMoviesRemoteDataSource,
-    private val searchMoviesRemoteDataSource: SearchMoviesRemoteDataSource
-) : ViewModelProvider.Factory {
+    fun addToWatchLater(id: String) {
+        watcherLaterLocalDataSource.addToWatchLater(id)
+    }
 
-    override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-        if (modelClass.isAssignableFrom(MoviesViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return MoviesViewModel(popularMoviesRemoteDataSource, searchMoviesRemoteDataSource) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
+    fun removeFromWatchLater(id: String) {
+        watcherLaterLocalDataSource.removeFromWatchLater(id)
+    }
+
+    private fun isAddedToWatchLater(id: String): Boolean {
+        return watcherLaterLocalDataSource.isInWatchLater(id)
     }
 }
 
