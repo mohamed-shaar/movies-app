@@ -13,7 +13,7 @@ import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 
-class WatchLaterLocalDatasourceImplTest {
+class WatchLaterLocalDatasourceTest {
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var sharedPreferencesEditor: SharedPreferences.Editor
