@@ -1,6 +1,6 @@
-package com.company.moviesapp.data.remote.datasource.moviedetails
+package com.company.moviesapp.detailsscreen.data.remote.datasource.moviedetails
 
-import com.company.moviesapp.data.remote.dto.MovieDetailsResponse
+import com.company.moviesapp.detailsscreen.data.remote.dto.MovieDetailsResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.url

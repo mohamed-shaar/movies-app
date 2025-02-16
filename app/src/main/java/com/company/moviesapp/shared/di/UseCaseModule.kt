@@ -1,8 +1,8 @@
 package com.company.moviesapp.shared.di
 
-import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsRemoteDataSource
-import com.company.moviesapp.data.remote.datasource.moviedetails.MovieDetailsRemoteDataSource
-import com.company.moviesapp.data.remote.datasource.similarmovies.SimilarMoviesRemoteDataSource
+import com.company.moviesapp.detailsscreen.data.remote.datasource.moviecredits.MovieCreditsRemoteDataSource
+import com.company.moviesapp.detailsscreen.data.remote.datasource.moviedetails.MovieDetailsRemoteDataSource
+import com.company.moviesapp.detailsscreen.data.remote.datasource.similarmovies.SimilarMoviesRemoteDataSource
 import com.company.moviesapp.presentation.mappers.MovieDetailsMapper
 import com.company.moviesapp.presentation.usecase.GetMovieDetailsScreenUseCase
 import com.company.moviesapp.presentation.usecase.GetMovieDetailsScreenUseCaseImpl

@@ -1,6 +1,6 @@
-package com.company.moviesapp.data.remote.datasource.similarmovies
+package com.company.moviesapp.detailsscreen.data.remote.datasource.similarmovies
 
-import com.company.moviesapp.data.remote.dto.SimilarMoviesResponse
+import com.company.moviesapp.detailsscreen.data.remote.dto.SimilarMoviesResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.url

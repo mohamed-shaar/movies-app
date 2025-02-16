@@ -2,10 +2,10 @@ package com.company.moviesapp.presentation.mappers
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.company.moviesapp.data.remote.dto.Cast
-import com.company.moviesapp.data.remote.dto.Crew
-import com.company.moviesapp.data.remote.dto.MovieCreditsResponse
-import com.company.moviesapp.data.remote.dto.MovieDetailsResponse
+import com.company.moviesapp.detailsscreen.data.remote.dto.Cast
+import com.company.moviesapp.detailsscreen.data.remote.dto.Crew
+import com.company.moviesapp.detailsscreen.data.remote.dto.MovieCreditsResponse
+import com.company.moviesapp.detailsscreen.data.remote.dto.MovieDetailsResponse
 import com.company.moviesapp.presentation.models.CastDisplayModel
 import com.company.moviesapp.presentation.models.MovieDetailsDisplayModel
 import com.company.moviesapp.presentation.models.MovieDisplayModel

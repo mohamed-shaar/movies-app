@@ -1,12 +1,12 @@
-package com.company.moviesapp.data.remote.dto
+package com.company.moviesapp.listscreen.data.remote.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SearchMoviesResponse(
+data class PopularMoviesResponse(
     val page: Long,
-    val results: List<SearchMovie>,
+    val results: List<PopularMovie>,
     @SerialName("total_pages")
     val totalPages: Long,
     @SerialName("total_results")
@@ -14,7 +14,7 @@ data class SearchMoviesResponse(
 )
 
 @Serializable
-data class SearchMovie(
+data class PopularMovie(
     val adult: Boolean,
     @SerialName("backdrop_path")
     val backdropPath: String?,
@@ -38,4 +38,3 @@ data class SearchMovie(
     @SerialName("vote_count")
     val voteCount: Long,
 )
-

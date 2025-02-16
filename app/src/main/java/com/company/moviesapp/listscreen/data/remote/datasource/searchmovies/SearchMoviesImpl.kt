@@ -1,6 +1,6 @@
-package com.company.moviesapp.data.remote.datasource.searchmovies
+package com.company.moviesapp.listscreen.data.remote.datasource.searchmovies
 
-import com.company.moviesapp.data.remote.dto.SearchMoviesResponse
+import com.company.moviesapp.listscreen.data.remote.dto.SearchMoviesResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter

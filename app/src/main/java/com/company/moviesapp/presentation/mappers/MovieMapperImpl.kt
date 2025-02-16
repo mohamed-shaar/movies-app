@@ -3,8 +3,8 @@ package com.company.moviesapp.presentation.mappers
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.company.moviesapp.data.remote.dto.PopularMovie
-import com.company.moviesapp.data.remote.dto.SearchMovie
+import com.company.moviesapp.listscreen.data.remote.dto.PopularMovie
+import com.company.moviesapp.listscreen.data.remote.dto.SearchMovie
 import com.company.moviesapp.presentation.models.GroupedMovieList
 import com.company.moviesapp.presentation.models.MovieDisplayModel
 import com.company.moviesapp.presentation.utils.parseDate

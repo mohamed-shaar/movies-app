@@ -1,6 +1,6 @@
-package com.company.moviesapp.data.remote.datasource.popularmovies
+package com.company.moviesapp.listscreen.data.remote.datasource.popularmovies
 
-import com.company.moviesapp.data.remote.dto.PopularMoviesResponse
+import com.company.moviesapp.listscreen.data.remote.dto.PopularMoviesResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter

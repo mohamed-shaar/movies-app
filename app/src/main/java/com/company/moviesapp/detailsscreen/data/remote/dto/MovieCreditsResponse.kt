@@ -1,4 +1,4 @@
-package com.company.moviesapp.data.remote.dto
+package com.company.moviesapp.detailsscreen.data.remote.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

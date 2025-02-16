@@ -1,12 +1,12 @@
-package com.company.moviesapp.data.remote.dto
+package com.company.moviesapp.listscreen.data.remote.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SimilarMoviesResponse(
+data class SearchMoviesResponse(
     val page: Long,
-    val results: List<SimilarMovie>,
+    val results: List<SearchMovie>,
     @SerialName("total_pages")
     val totalPages: Long,
     @SerialName("total_results")
@@ -14,7 +14,7 @@ data class SimilarMoviesResponse(
 )
 
 @Serializable
-data class SimilarMovie(
+data class SearchMovie(
     val adult: Boolean,
     @SerialName("backdrop_path")
     val backdropPath: String?,

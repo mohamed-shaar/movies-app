@@ -1,9 +1,9 @@
 package com.company.moviesapp.presentation.usecase
 
-import com.company.moviesapp.data.remote.datasource.moviecredits.MovieCreditsRemoteDataSource
-import com.company.moviesapp.data.remote.datasource.moviedetails.MovieDetailsRemoteDataSource
-import com.company.moviesapp.data.remote.datasource.similarmovies.SimilarMoviesRemoteDataSource
-import com.company.moviesapp.data.remote.dto.MovieCreditsResponse
+import com.company.moviesapp.detailsscreen.data.remote.datasource.moviecredits.MovieCreditsRemoteDataSource
+import com.company.moviesapp.detailsscreen.data.remote.datasource.moviedetails.MovieDetailsRemoteDataSource
+import com.company.moviesapp.detailsscreen.data.remote.datasource.similarmovies.SimilarMoviesRemoteDataSource
+import com.company.moviesapp.detailsscreen.data.remote.dto.MovieCreditsResponse
 import com.company.moviesapp.presentation.mappers.MovieDetailsMapper
 import com.company.moviesapp.presentation.models.MovieDetailsDisplayModel
 import com.company.moviesapp.presentation.models.MovieDisplayModel
