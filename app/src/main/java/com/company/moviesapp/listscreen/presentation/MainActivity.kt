@@ -1,4 +1,4 @@
-package com.company.moviesapp.presentation
+package com.company.moviesapp.listscreen.presentation
 
 import android.content.Intent
 import android.os.Build
@@ -14,8 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.company.moviesapp.presentation.ui.MovieList
-import com.company.moviesapp.presentation.viewmodel.MoviesViewModel
+import com.company.moviesapp.detailsscreen.presentation.MovieDetailsActivity
+import com.company.moviesapp.listscreen.presentation.viewmodel.MoviesViewModel
 import com.company.moviesapp.shared.data.local.datasource.TokenProvider
 import com.company.moviesapp.ui.theme.MoviesAppTheme
 import dagger.hilt.android.AndroidEntryPoint

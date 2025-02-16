@@ -1,13 +1,13 @@
-package com.company.moviesapp.presentation.mappers
+package com.company.moviesapp.listscreen.presentation.mapper
 
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.company.moviesapp.listscreen.data.remote.dto.PopularMovie
 import com.company.moviesapp.listscreen.data.remote.dto.SearchMovie
-import com.company.moviesapp.presentation.models.GroupedMovieList
-import com.company.moviesapp.presentation.models.MovieDisplayModel
-import com.company.moviesapp.presentation.utils.parseDate
+import com.company.moviesapp.listscreen.presentation.model.GroupedMovieList
+import com.company.moviesapp.listscreen.presentation.model.MovieDisplayModel
+import com.company.moviesapp.shared.utils.parseDate
 import java.time.ZoneId
 import javax.inject.Inject
 

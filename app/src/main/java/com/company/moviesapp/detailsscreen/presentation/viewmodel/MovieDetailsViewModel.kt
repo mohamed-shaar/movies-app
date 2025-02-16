@@ -1,10 +1,10 @@
-package com.company.moviesapp.presentation.viewmodel
+package com.company.moviesapp.detailsscreen.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.company.moviesapp.presentation.models.MovieDetailsDisplayModel
-import com.company.moviesapp.presentation.usecase.GetMovieDetailsScreenUseCase
+import com.company.moviesapp.detailsscreen.domain.usecase.GetMovieDetailsScreenUseCase
+import com.company.moviesapp.detailsscreen.presentation.model.MovieDetailsDisplayModel
 import com.company.moviesapp.shared.data.local.datasource.WatchLaterLocalDataSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

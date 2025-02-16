@@ -1,4 +1,4 @@
-package com.company.moviesapp.presentation
+package com.company.moviesapp.detailsscreen.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -34,13 +34,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.company.moviesapp.presentation.models.CastDisplayModel
-import com.company.moviesapp.presentation.models.MovieDetailsDisplayModel
-import com.company.moviesapp.presentation.ui.ImageWithPlaceholder
-import com.company.moviesapp.presentation.ui.MovieItem
-import com.company.moviesapp.presentation.ui.WatchLaterIcon
-import com.company.moviesapp.presentation.viewmodel.MovieDetailsUiState
-import com.company.moviesapp.presentation.viewmodel.MovieDetailsViewModel
+import com.company.moviesapp.detailsscreen.presentation.model.CastDisplayModel
+import com.company.moviesapp.detailsscreen.presentation.model.MovieDetailsDisplayModel
+import com.company.moviesapp.detailsscreen.presentation.viewmodel.MovieDetailsUiState
+import com.company.moviesapp.detailsscreen.presentation.viewmodel.MovieDetailsViewModel
+import com.company.moviesapp.shared.presentation.ui.ImageWithPlaceholder
+import com.company.moviesapp.shared.presentation.ui.MovieItem
+import com.company.moviesapp.shared.presentation.ui.WatchLaterIcon
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

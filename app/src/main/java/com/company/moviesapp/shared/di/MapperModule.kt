@@ -1,9 +1,9 @@
 package com.company.moviesapp.shared.di
 
-import com.company.moviesapp.presentation.mappers.MovieDetailsMapper
-import com.company.moviesapp.presentation.mappers.MovieDetailsMapperImpl
-import com.company.moviesapp.presentation.mappers.MovieMapper
-import com.company.moviesapp.presentation.mappers.MovieMapperImpl
+import com.company.moviesapp.detailsscreen.presentation.mapper.MovieDetailsMapper
+import com.company.moviesapp.detailsscreen.presentation.mapper.MovieDetailsMapperImpl
+import com.company.moviesapp.listscreen.presentation.mapper.MovieMapper
+import com.company.moviesapp.listscreen.presentation.mapper.MovieMapperImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

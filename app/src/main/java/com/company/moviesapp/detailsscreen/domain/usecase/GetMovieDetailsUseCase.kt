@@ -1,14 +1,14 @@
-package com.company.moviesapp.presentation.usecase
+package com.company.moviesapp.detailsscreen.domain.usecase
 
 import com.company.moviesapp.detailsscreen.data.remote.datasource.moviecredits.MovieCreditsRemoteDataSource
 import com.company.moviesapp.detailsscreen.data.remote.datasource.moviedetails.MovieDetailsRemoteDataSource
 import com.company.moviesapp.detailsscreen.data.remote.datasource.similarmovies.SimilarMoviesRemoteDataSource
 import com.company.moviesapp.detailsscreen.data.remote.dto.MovieCreditsResponse
-import com.company.moviesapp.presentation.mappers.MovieDetailsMapper
-import com.company.moviesapp.presentation.models.MovieDetailsDisplayModel
-import com.company.moviesapp.presentation.models.MovieDisplayModel
-import com.company.moviesapp.presentation.utils.parseDate
+import com.company.moviesapp.detailsscreen.presentation.mapper.MovieDetailsMapper
+import com.company.moviesapp.detailsscreen.presentation.model.MovieDetailsDisplayModel
+import com.company.moviesapp.listscreen.presentation.model.MovieDisplayModel
 import com.company.moviesapp.shared.data.local.datasource.WatchLaterLocalDataSource
+import com.company.moviesapp.shared.utils.parseDate
 
 interface GetMovieDetailsScreenUseCase {
     suspend fun getMovieDetailsScreen(id: String): MovieDetailsDisplayModel

@@ -1,4 +1,6 @@
-package com.company.moviesapp.presentation.models
+package com.company.moviesapp.detailsscreen.presentation.model
+
+import com.company.moviesapp.listscreen.presentation.model.MovieDisplayModel
 
 data class MovieDetailsDisplayModel(
     val id: String,

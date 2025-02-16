@@ -1,4 +1,4 @@
-package com.company.moviesapp.presentation.models
+package com.company.moviesapp.listscreen.presentation.model
 
 import java.util.Date
 

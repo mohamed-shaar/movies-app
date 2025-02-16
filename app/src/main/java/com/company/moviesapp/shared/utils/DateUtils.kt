@@ -1,4 +1,4 @@
-package com.company.moviesapp.presentation.utils
+package com.company.moviesapp.shared.utils
 
 import java.text.SimpleDateFormat
 import java.util.Date
