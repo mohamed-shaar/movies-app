@@ -66,27 +66,39 @@ fun MovieList(
 
             is MovieUiState.Success -> {
                 val groupedMovies = (moviesState as MovieUiState.Success).movies
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
+                if (groupedMovies.isEmpty())
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Text(
+                            text = "No results to show.",
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
+                else
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
 
-                    groupedMovies.forEach { group ->
-                        // Sticky header for the year
-                        stickyHeader {
-                            YearHeader(group.year)
-                        }
+                        groupedMovies.forEach { group ->
+                            // Sticky header for the year
+                            stickyHeader {
+                                YearHeader(group.year)
+                            }
 
-                        // List of movies in this group
-                        items(group.movies) { movie ->
-                            MovieItem(movie, onClick, onToggleWatchLater = { isAdded ->
-                                onToggleWatchLater(movie.id, isAdded)
-                            })
+                            // List of movies in this group
+                            items(group.movies) { movie ->
+                                MovieItem(movie, onClick, onToggleWatchLater = { isAdded ->
+                                    onToggleWatchLater(movie.id, isAdded)
+                                })
+                            }
                         }
                     }
-                }
             }
 
             else -> {
