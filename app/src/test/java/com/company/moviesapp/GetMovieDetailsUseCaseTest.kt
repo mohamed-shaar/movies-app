@@ -10,6 +10,7 @@ import com.company.moviesapp.detailsscreen.data.remote.dto.SimilarMoviesResponse
 import com.company.moviesapp.detailsscreen.domain.usecase.GetMovieDetailsScreenUseCaseImpl
 import com.company.moviesapp.detailsscreen.presentation.mapper.MovieDetailsMapper
 import com.company.moviesapp.detailsscreen.presentation.model.MovieDetailsDisplayModel
+import com.company.moviesapp.listscreen.presentation.model.MovieDisplayModel
 import com.company.moviesapp.shared.data.local.datasource.WatchLaterLocalDataSource
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
@@ -59,6 +60,8 @@ class GetMovieDetailsScreenUseCaseImplTest {
         val similarMoviesResponse = mock(SimilarMoviesResponse::class.java)
         val similarMovie = mock(SimilarMovie::class.java)
         val similarMovies = listOf(similarMovie)
+        val movieDisplayModel = mock(MovieDisplayModel::class.java)
+        val movieDisplayModels = listOf(movieDisplayModel)
         val similarMoviesCreditsResponse = listOf(mock(MovieCreditsResponse::class.java))
         val movieDetailsDisplayModel = mock(MovieDetailsDisplayModel::class.java)
 
@@ -80,11 +83,11 @@ class GetMovieDetailsScreenUseCaseImplTest {
         // Mock mapper behavior
         `when`(
             movieDetailsMapper.mapMovieDetailsResponse(
-                movieDetailsResponse,
-                movieCreditsResponse,
-                anyList(),
-                anyList(),
-                watchLaterLocalDataSource
+                movieDetailsResponse, // Use argument matcher for movieDetailsResponse
+                movieCreditsResponse, // Use argument matcher for movieCreditsResponse
+                movieDisplayModels, // Argument matcher
+                similarMoviesCreditsResponse, // Argument matcher
+                watchLaterLocalDataSource // Use argument matcher for watchLaterLocalDataSource
             )
         ).thenReturn(movieDetailsDisplayModel)
 
