@@ -3,16 +3,21 @@ package com.company.moviesapp.shared.data.local.datasource
 import javax.inject.Inject
 import javax.inject.Singleton
 
+interface TokenProvider {
+    fun setToken(token: String)
+    fun getToken(): String?
+}
+
 @Singleton
-class TokenProvider @Inject constructor() {
+class TokenProviderImpl @Inject constructor() : TokenProvider {
 
     private var token: String? = null
 
-    fun setToken(token: String) {
+    override fun setToken(token: String) {
         this.token = token
     }
 
-    fun getToken(): String? {
+    override fun getToken(): String? {
         return token
     }
 }
