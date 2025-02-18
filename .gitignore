@@ -13,5 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
-keystore.properties
 movieapp.jks
+./keystore.properties
