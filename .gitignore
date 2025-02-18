@@ -14,4 +14,4 @@
 .cxx
 local.properties
 movieapp.jks
-./keystore.properties
+keystore.properties
