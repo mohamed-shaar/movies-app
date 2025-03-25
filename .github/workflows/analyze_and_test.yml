@@ -18,19 +18,19 @@ jobs:
         with:
           java-version: 19
           distribution: 'temurin'
-#
-#      - name: Run lint analysis
-#        run: ./gradlew lintDebug --stacktrace
-#
-#      - name: Run detekt (if configured)
+
+      - name: Run lint analysis
+        run: ./gradlew lintDebug --stacktrace
+
+      #      - name: Run detekt (if configured)
 #        run: ./gradlew detekt --stacktrace
-#
-#      - name: Archive lint results
-#        if: always()
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: lint-results
-#          path: app/build/reports/lint-results-debug.html
+
+      - name: Archive lint results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: lint-results
+          path: app/build/reports/lint-results-debug.html
 #
 #  test:
 #    name: Run Tests
