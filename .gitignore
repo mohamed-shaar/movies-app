@@ -15,5 +15,4 @@
 local.properties
 movieapp.jks
 keystore.properties
-apikeys.properties
 secrets.properties
