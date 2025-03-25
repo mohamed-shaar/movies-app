@@ -1,7 +1,6 @@
 package com.company.moviesapp.detailsscreen.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.company.moviesapp.detailsscreen.domain.usecase.GetMovieDetailsScreenUseCase
 import com.company.moviesapp.detailsscreen.presentation.model.MovieDetailsDisplayModel
@@ -17,7 +16,7 @@ import javax.inject.Inject
 class MovieDetailsViewModel @Inject constructor(
     private val getMovieDetailsScreen: GetMovieDetailsScreenUseCase,
     private val watchLaterLocalDataSource: WatchLaterLocalDataSource
-) : ViewModel(), ViewModelProvider.Factory {
+) : ViewModel() {
 
     private val _moviesState = MutableStateFlow<MovieDetailsUiState>(MovieDetailsUiState.Loading)
     val moviesState: StateFlow<MovieDetailsUiState> get() = _moviesState.asStateFlow()
