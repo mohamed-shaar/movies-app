@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.company.moviesapp.BuildConfig
 import com.company.moviesapp.detailsscreen.presentation.MovieDetailsActivity
 import com.company.moviesapp.listscreen.presentation.viewmodel.MoviesViewModel
 import com.company.moviesapp.shared.data.local.datasource.TokenProvider
@@ -33,10 +34,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val token = intent.getStringExtra("bearer_token")
-        if (token != null) {
-            tokenProvider.setToken(token)
-        }
+        val secret = BuildConfig.MOVIES_API_KEY
+        tokenProvider.setToken(secret)
         moviesViewModel.getData()
         setContent {
             MoviesAppTheme {

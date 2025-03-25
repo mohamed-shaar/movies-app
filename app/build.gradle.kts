@@ -19,6 +19,13 @@ val keystoreProperties = Properties()
 // Load your keystore.properties file into the keystoreProperties object.
 keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
+val secretProperties = Properties().apply {
+    val localPropertiesFile = rootProject.file("secrets.properties")
+    if (localPropertiesFile.exists()) {
+        load(localPropertiesFile.inputStream())
+    }
+}
+
 android {
     namespace = "com.company.moviesapp"
     compileSdk = 34
@@ -29,6 +36,11 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+        buildConfigField(
+            "String",
+            "MOVIES_API_KEY",
+            "\"${secretProperties.getProperty("movies.api.key")}\""
+        )
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -68,6 +80,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.15"
