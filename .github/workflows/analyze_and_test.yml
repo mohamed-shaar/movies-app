@@ -1,0 +1,85 @@
+name: Analyze and Test
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  analyze:
+    name: Analyze Code
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 19
+          distribution: 'temurin'
+
+      - name: Recreate keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > keystore.properties
+
+      - name: Run lint analysis
+        run: ./gradlew lintDebug --stacktrace
+
+      #      - name: Run detekt (if configured)
+#        run: ./gradlew detekt --stacktrace
+
+      - name: Archive lint results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-results
+          path: app/build/reports/lint-results-debug.html
+
+  test:
+    name: Run Unit and Instrumental Tests
+    runs-on: ubuntu-latest
+    needs: analyze  # Run tests only after analysis passes
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 19
+          distribution: 'temurin'
+
+      - name: Recreate keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > keystore.properties
+
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest --stacktrace
+
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Android Emulator Runner
+        if: success()
+        uses: ReactiveCircus/android-emulator-runner@v2.33.0
+        with:
+          api-level: 29
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew connectedDebugAndroidTest --stacktrace
+        env:
+          JAVA_OPTS: "-Xmx4096m"  # Increase memory if needed
+
+      - name: Archive test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            app/build/reports/tests/
+            app/build/outputs/androidTest-results/
